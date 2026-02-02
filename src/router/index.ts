@@ -4,7 +4,7 @@ import AboutPage from '@/views/AboutPage.vue'
 
 const routes = [
   {
-    path: '/',
+    path: '/flow',
     name: 'home',
     component: HomePage
   },
