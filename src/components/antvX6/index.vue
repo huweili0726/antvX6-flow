@@ -21,43 +21,41 @@ onMounted(() => {
   graph.centerContent()
 
 
-
   const rect = new Shape.Rect({
-  id: 'node1',
-  x: 40,
-  y: 40,
-  width: 100,
-  height: 40,
-  label: 'rect', 
-  zIndex: 2,
-})
+    id: 'node1',
+    x: 40,
+    y: 40,
+    width: 100,
+    height: 40,
+    label: 'rect',
+    zIndex: 2,
+  })
 
-const circle = new Shape.Circle({
-  id: 'node2',
-  x: 280,
-  y: 200,
-  width: 60,
-  height: 60,
-  label: 'circle', 
-  zIndex: 2,
-})
+  const circle = new Shape.Circle({
+    id: 'node2',
+    x: 280,
+    y: 200,
+    width: 60,
+    height: 60,
+    label: 'circle',
+    zIndex: 2,
+  })
 
-const edge = new Shape.Edge({
-  id: 'edge1',
-  source: rect,
-  target: circle,
-  zIndex: 1,
-})
+  const edge = new Shape.Edge({
+    id: 'edge1',
+    source: rect,
+    target: circle,
+    zIndex: 1,
+  })
 
-graph.addNode(rect)
-graph.addNode(circle)
-graph.addEdge(edge)
+  graph.addNode(rect)
+  graph.addNode(circle)
+  graph.addEdge(edge)
 })
 </script>
 <style scoped lang="less">
 .flow-container {
   width: 100%;
   height: 100%;
-  border: 1px solid red;
 }
 </style>
