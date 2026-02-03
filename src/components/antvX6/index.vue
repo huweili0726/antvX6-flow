@@ -81,12 +81,12 @@ onMounted(() => {
   // 注册HTML节点类型
   Shape.HTML.register({
     shape: 'custom-html',
-    width: 160,
-    height: 80,
+    width: 130,
+    height: 45,
     html() {
       const div = document.createElement('div')
       div.className = 'custom-html'
-      div.innerHTML = '<div class="custom-html-content" style="background: #f0f0f0; border: 1px solid #ccc;">HTML节点</div>'
+      div.innerHTML = '<div class="custom-html-content">html节点</div>'
       return div
     },
   })
@@ -97,8 +97,6 @@ onMounted(() => {
     shape: 'custom-html',
     x: 400,
     y: 120,
-    width: 40,
-    height: 40,
     zIndex: 2,
   })
 
@@ -148,20 +146,12 @@ onMounted(() => {
   width: 100%;
   height: 100%;
 }
-.custom-html-content{
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid blue;
-}
 .minimap-container {
   position: absolute;
   top: 10px;
   left: 10px;
   width: auto;
   height: auto;
-  border: 1px solid #ccc;
+  border: 1px solid black;
 }
 </style>
