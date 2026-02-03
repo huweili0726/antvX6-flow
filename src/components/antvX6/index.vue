@@ -1,6 +1,6 @@
 <template>
   <div class="flow-container" ref="graphContainer" />
-  <div class="minimap-container" ref="minimapContainer"></div>
+  <div class="minimap-container" ref="minimapContainer" />
 </template>
 
 <script setup lang="ts">
@@ -8,7 +8,7 @@ import { Graph, Shape, Snapline, MiniMap } from '@antv/x6'
 import { ref, onMounted } from 'vue'
 
 const graphContainer = ref<HTMLDivElement>()
-  const minimapContainer = ref<HTMLDivElement>()
+const minimapContainer = ref<HTMLDivElement>()
 
 onMounted(() => {
   const graph = new Graph({
@@ -30,16 +30,6 @@ onMounted(() => {
   graph.use(
     new Snapline({
       enabled: true,
-    }),
-  )
-
-  // 小地图
-  graph.use(
-    new MiniMap({
-      container: minimapContainer.value!,
-      width: 200,
-      height: 100,
-      padding: 0,
     }),
   )
 
@@ -79,12 +69,45 @@ onMounted(() => {
     }
   })
 
+  graph.use(
+    new MiniMap({
+      container: minimapContainer.value!,
+      width: 200,
+      height: 100,
+      padding: 0,
+    }),
+  )
 
-  const edge = graph.addEdge({
+  // 注册HTML节点类型
+  Shape.HTML.register({
+    shape: 'custom-html',
+    width: 160,
+    height: 80,
+    html() {
+      const div = document.createElement('div')
+      div.className = 'custom-html'
+      div.innerHTML = '<div class="custom-html-content" style="background: #f0f0f0; border: 1px solid #ccc;">HTML节点</div>'
+      return div
+    },
+  })
+
+  // 创建HTML节点实例
+  const htmlNode = graph.addNode({
+    id: 'html1',
+    shape: 'custom-html',
+    x: 400,
+    y: 120,
+    width: 40,
+    height: 40,
+    zIndex: 2,
+  })
+
+  // 创建连线
+  const edge1 = graph.addEdge({
     id: 'edge1',
     shape: 'edge',
     source: 'node1', 
-    target: 'node2',
+    target: 'html1',
     labels: ['通信中'],
     attrs: {
       line: {
@@ -94,9 +117,27 @@ onMounted(() => {
     zIndex: 1,
   })
 
+  // 创建另一条连线
+  const edge2 = graph.addEdge({
+    id: 'edge2',
+    shape: 'edge',
+    source: 'html1', 
+    target: 'node2',
+    labels: ['连接'],
+    attrs: {
+      line: {
+        stroke: "#42b883", // 指定 path 元素的填充色
+      },
+    },
+    zIndex: 1,
+  })
+
   graph.addNode(imageNode1)
   graph.addNode(imageNode2)
-  graph.addEdge(edge)
+  graph.addNode(htmlNode)
+
+  graph.addEdge(edge1)
+  graph.addEdge(edge2)
 
   // 居中显示画布内容
   graph.centerContent()
@@ -106,6 +147,14 @@ onMounted(() => {
 .flow-container {
   width: 100%;
   height: 100%;
+}
+.custom-html-content{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid blue;
 }
 .minimap-container {
   position: absolute;
