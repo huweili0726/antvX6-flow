@@ -1,12 +1,14 @@
 <template>
   <div class="flow-container" ref="graphContainer" />
+  <div class="minimap-container" ref="minimapContainer"></div>
 </template>
 
 <script setup lang="ts">
-import { Graph, Shape, Snapline } from '@antv/x6'
+import { Graph, Shape, Snapline, MiniMap } from '@antv/x6'
 import { ref, onMounted } from 'vue'
 
 const graphContainer = ref<HTMLDivElement>()
+  const minimapContainer = ref<HTMLDivElement>()
 
 onMounted(() => {
   const graph = new Graph({
@@ -28,6 +30,13 @@ onMounted(() => {
   graph.use(
     new Snapline({
       enabled: true,
+    }),
+  )
+
+  // 小地图
+  graph.use(
+    new MiniMap({
+      container: minimapContainer.value!,
     }),
   )
 
@@ -94,5 +103,13 @@ onMounted(() => {
 .flow-container {
   width: 100%;
   height: 100%;
+}
+.minimap-container {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: auto;
+  height: auto;
+  border: 1px solid #ccc;
 }
 </style>
