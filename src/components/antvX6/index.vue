@@ -37,6 +37,9 @@ onMounted(() => {
   graph.use(
     new MiniMap({
       container: minimapContainer.value!,
+      width: 200,
+      height: 100,
+      padding: 0,
     }),
   )
 
