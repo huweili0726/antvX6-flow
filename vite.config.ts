@@ -13,6 +13,13 @@ export default ({ mode }: ConfigEnv) => {
     plugins: [
       vue()
     ],
+    optimizeDeps: {
+      include: ['@antv/x6', '@antv/x6-plugin-snapline'],
+      esbuildOptions: { target: 'es2020' }
+    },
+    ssr: {
+      noExternal: ['@antv/x6', '@antv/x6-plugin-snapline']
+    },
     server: {
       host: '0.0.0.0', // 监听所有网络接口
       port: 3001, // 监听端口
@@ -31,5 +38,12 @@ export default ({ mode }: ConfigEnv) => {
       },
       extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
     },
+    build: {
+      commonjsOptions: {
+        include: [/node_modules/],
+        transformMixedEsModules: true
+      },
+      target: 'es2020'
+    }
   })
 }
