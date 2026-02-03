@@ -15,42 +15,57 @@ onMounted(() => {
     panning: {
       enabled: true, // 普通画布(未开启 scroller 模式)通过开启 panning 选项来支持拖拽平移
       eventTypes: ['leftMouseDown', 'rightMouseDown', 'mouseWheel']
-    },
+    }
   })
 
-  graph.centerContent()
-
-
-  const rect = new Shape.Rect({
+  const imageNode1 = new Shape.Image({
     id: 'node1',
-    x: 40,
-    y: 40,
-    width: 100,
-    height: 40,
-    label: 'rect',
+    x: 120,
+    y: 120,
+    width: 69,
+    height: 64,
     zIndex: 2,
+    attrs: {
+      image: {
+        // 使用本地图片
+        'xlink:href': new URL('@/assets/img/lyq.png', import.meta.url).href,
+        width: 80,
+        height: 80,
+        preserveAspectRatio: 'xMidYMid meet'
+      }
+    }
   })
 
-  const circle = new Shape.Circle({
+  // 创建图片节点
+  const imageNode2 = new Shape.Image({
     id: 'node2',
-    x: 280,
-    y: 200,
-    width: 60,
-    height: 60,
-    label: 'circle',
+    x: 760,
+    y: 120,
+    width: 136,
+    height: 64,
     zIndex: 2,
+    attrs: {
+      image: {
+        // 使用本地图片
+        'xlink:href': new URL('@/assets/img/jhj.png', import.meta.url).href,
+        width: 80,
+        height: 80,
+        preserveAspectRatio: 'xMidYMid meet'
+      }
+    }
   })
-
   const edge = new Shape.Edge({
     id: 'edge1',
-    source: rect,
-    target: circle,
+    source: imageNode1,
+    target: imageNode2,
     zIndex: 1,
   })
 
-  graph.addNode(rect)
-  graph.addNode(circle)
+  graph.addNode(imageNode1)
+  graph.addNode(imageNode2)
   graph.addEdge(edge)
+
+  graph.centerContent()
 })
 </script>
 <style scoped lang="less">
