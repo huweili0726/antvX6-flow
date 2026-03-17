@@ -350,6 +350,32 @@ export function useGraph() {
     })
   }
 
+  // 隐藏所有节点的锚点
+  const hideNodePorts = () => {
+    const graph = graphStore.getGraph()
+    if (!graph) return
+    
+    graph.getNodes().forEach(node => {
+      const ports = node.getPorts()
+      ports.forEach((port: any) => {
+        node.setPortProp(port.id, 'attrs/circle/style/display', 'none')
+      })
+    })
+  }
+
+  // 显示所有节点的锚点
+  const showNodePorts = () => {
+    const graph = graphStore.getGraph()
+    if (!graph) return
+    
+    graph.getNodes().forEach(node => {
+      const ports = node.getPorts()
+      ports.forEach((port: any) => {
+        node.setPortProp(port.id, 'attrs/circle/style/display', 'block')
+      })
+    })
+  }
+
   // 删除节点
   const removeNode = (nodeId: string) => {
     const graph = graphStore.getGraph()
@@ -393,6 +419,8 @@ export function useGraph() {
     getAllEdgesData,
     hideEdgeRemoveButtons,
     showEdgeRemoveButtons,
+    hideNodePorts,
+    showNodePorts,
     removeNode,
     removeEdge,
     clearGraph,
