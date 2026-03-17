@@ -72,9 +72,9 @@ const handleEdit = () => {
     editNodeName(node.id)
   })
   
+  enableGraphInteraction()
   showEdgeRemoveButtons()
   showNodePorts()
-  enableGraphInteraction()
 }
 </script>
 
