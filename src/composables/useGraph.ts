@@ -74,17 +74,17 @@ export function useGraph(container: HTMLDivElement, minimapContainer: HTMLDivEle
     })
 
     // 注册通用HTML节点类型
-    Shape.HTML.register({
-      shape: 'custom-html',
-      width: 130,
-      height: 45,
-      html() {
-        const div = document.createElement('div')
-        div.className = 'custom-html'
-        div.innerHTML = '<div class="custom-html-content">html节点</div>'
-        return div
-      },
-    })
+    // Shape.HTML.register({
+    //   shape: 'custom-html',
+    //   width: 130,
+    //   height: 45,
+    //   html() {
+    //     const div = document.createElement('div')
+    //     div.className = 'custom-html'
+    //     div.innerHTML = '<div class="custom-html-content">html节点</div>'
+    //     return div
+    //   },
+    // })
   }
 
   // 创建节点和连线

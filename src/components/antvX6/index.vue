@@ -22,7 +22,7 @@ onMounted(() => {
   
   registerPlugins() // 对齐线 + 小地图
   registerNodeTypes() // 注册自定义节点类型 (html)
-  createNodes() // 创建普通图片节点和连线
+  // createNodes() // 创建普通图片节点和连线
   graph.centerContent() // 将内容居中显示
 })
 
