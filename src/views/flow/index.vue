@@ -93,27 +93,54 @@ const handleDragStart = (event: DragEvent) => {
   const nodeElement = target.closest('.draggable-node')
   if (nodeElement) {
     draggedNodeType.value = nodeElement.getAttribute('data-type') || ''
+    // event.dataTransfer : 拖拽数据传输对象，用于在拖拽过程中存储和传递数据
     event.dataTransfer?.setData('nodeType', draggedNodeType.value)
   }
 }
 
-// 处理节点拖拽释放事件
+/**
+ * 处理节点拖拽释放事件
+ * 当用户从操作面板拖拽节点到画布区域并释放时触发
+ * @param event - 拖拽事件对象，包含拖拽相关信息
+ */
 const handleDrop = (event: DragEvent) => {
+  // 阻止浏览器默认行为（防止打开链接等默认拖拽行为）
   event.preventDefault()
+  
+  // 从拖拽数据中获取节点类型（在 handleDragStart 中设置的）
   const nodeType = event.dataTransfer?.getData('nodeType')
+  
+  // 检查必要条件：节点类型存在、AntV X6 组件实例存在、图表容器存在
   if (nodeType && antvX6Ref.value && graphContainerRef.value) {
-    // 获取拖拽位置相对于图表容器的坐标
-    const rect = graphContainerRef.value.getBoundingClientRect()
-    const clientX = event.clientX - rect.left
-    const clientY = event.clientY - rect.top
     
-    // 将 DOM 坐标转换为画布坐标
+    // ========== 步骤1：获取容器的位置信息 ==========
+    // getBoundingClientRect() 返回元素相对于视口的位置和尺寸信息
+    // 包含：left, top, right, bottom, width, height
+    const rect = graphContainerRef.value.getBoundingClientRect()
+    
+    // ========== 步骤2：计算鼠标相对于容器的坐标 ==========
+    // event.clientX/Y 是鼠标相对于浏览器视口的坐标
+    // 减去 rect.left/top 得到相对于 graph-container 的坐标
+    const clientX = event.clientX - rect.left  // 鼠标在容器内的 X 坐标
+    const clientY = event.clientY - rect.top   // 鼠标在容器内的 Y 坐标
+    
+    // ========== 步骤3：获取 AntV X6 图表实例 ==========
+    // 通过组件暴露的 getGraph 方法获取图表实例
     const graph = antvX6Ref.value.getGraph()
+    
+    // ========== 步骤4：坐标转换并创建节点 ==========
     if (graph) {
+      // clientToLocal() 将 DOM 坐标转换为画布本地坐标
+      // 因为画布可能有缩放、平移，DOM 坐标和画布坐标系不一致
+      // 例如：画布缩放 50% 后，DOM 坐标 (100, 100) 对应画布坐标 (200, 200)
       const localPoint = graph.clientToLocal({ x: clientX, y: clientY })
+      
+      // 调用组件的 createNode 方法创建节点
+      // 参数：节点类型、X坐标、Y坐标
       antvX6Ref.value.createNode(nodeType, localPoint.x, localPoint.y)
     } else {
-      // 如果无法获取 graph，直接使用 DOM 坐标
+      // 降级处理：如果无法获取图表实例，直接使用 DOM 坐标创建节点
+      // 这种情况通常发生在图表未初始化完成时
       antvX6Ref.value.createNode(nodeType, clientX, clientY)
     }
   }
