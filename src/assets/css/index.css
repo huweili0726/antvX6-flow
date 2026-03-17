@@ -1,10 +1,13 @@
 /* html节点样式 */
 .custom-html{
+  width: 80px;
+  height: 80px;
   display: flex;
-  width: 130px;
-  height: 45px;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  cursor: move;
+  pointer-events: auto;
 }
 .custom-html-content{
   width: 100%;
@@ -16,12 +19,15 @@
   background-color: aqua;
 }
 .custom-html>img{
-  width: 50px; 
-  height: 50px; 
+  width: 40px;
+  height: 40px;
   object-fit: contain;
+  pointer-events: none;
 }
 .custom-html>span{
-  font-size: 12px;
+  font-size: 10px;
   color: #333;
   margin-top: 4px;
+  pointer-events: none;
+  white-space: nowrap;
 }
