@@ -159,10 +159,16 @@ export function useGraph(container: HTMLDivElement, minimapContainer: HTMLDivEle
     graph.addEdge(edge2)
   }
 
+  const resizeGraph = (width: number, height: number) => {
+    graph.resize(width, height)
+    graph.centerContent()
+  }
+
   return {
     graph,
     registerPlugins,
     registerNodeTypes,
     createNodes,
+    resizeGraph,
   }
 }
