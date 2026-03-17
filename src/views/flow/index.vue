@@ -5,7 +5,7 @@
       @drop="handleDrop" 
       @dragover="handleDragOver"
     >
-      <AntvX6 />
+      <AntvX6 ref="antvX6Ref" />
     </div>
     <div class="operation-panel">
       <div class="panel-title">操作面板</div>
@@ -83,6 +83,7 @@ import { ref } from 'vue'
 import AntvX6 from '@/components/antvX6/index.vue'
 
 const draggedNodeType = ref('')
+const antvX6Ref = ref<InstanceType<typeof AntvX6>>()
 
 const handleDragStart = (event: DragEvent) => {
   const target = event.target as HTMLElement
@@ -96,9 +97,14 @@ const handleDragStart = (event: DragEvent) => {
 const handleDrop = (event: DragEvent) => {
   event.preventDefault()
   const nodeType = event.dataTransfer?.getData('nodeType')
-  if (nodeType) {
-    // 这里可以调用AntvX6组件的方法来添加节点
-    console.log('拖拽的节点类型:', nodeType)
+  if (nodeType && antvX6Ref.value) {
+    // 获取拖拽位置相对于图表容器的坐标
+    const rect = (event.target as HTMLElement).getBoundingClientRect()
+    const x = event.clientX - rect.left
+    const y = event.clientY - rect.top
+    
+    // 创建节点
+    antvX6Ref.value.createNode(nodeType, x, y)
   }
 }
 

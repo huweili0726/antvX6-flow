@@ -44,7 +44,51 @@ export function useGraph(container: HTMLDivElement, minimapContainer: HTMLDivEle
 
   // 注册自定义节点类型
   const registerNodeTypes = () => {
-    // 注册HTML节点类型
+    // 节点类型配置
+    const nodeTypes = [
+      { type: 'switch1', name: '一级交换机', image: '一级交换机@1x.png' },
+      { type: 'switch2', name: '二级交换机', image: '二级交换机@1x.png' },
+      { type: 'switch3', name: '三级交换机', image: '三级交换机@1x.png' },
+      { type: 'firewall', name: '防火墙', image: '防火墙@1x.png' },
+      { type: 'gateway', name: '网闸', image: '网闸@1x.png' },
+      { type: 'database', name: '数据库', image: '数据库@1x.png' },
+      { type: 'ip', name: '专网IP', image: '专网IP@1x.png' },
+    ]
+
+    // 注册所有节点类型
+    nodeTypes.forEach(({ type, name, image }) => {
+      Shape.HTML.register({
+        shape: `node-${type}`,
+        width: 80,
+        height: 80,
+        html() {
+          const div = document.createElement('div')
+          div.className = 'custom-node'
+          div.style.cssText = `
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+            box-sizing: border-box;
+          `
+          div.innerHTML = `
+            <img src="${import.meta.env.BASE_URL}/src/assets/img/${image}" 
+                 style="width: 50px; height: 50px; object-fit: contain;" 
+                 alt="${name}" />
+            <span style="font-size: 12px; color: #333; margin-top: 4px;">${name}</span>
+          `
+          return div
+        },
+      })
+    })
+
+    // 注册通用HTML节点类型
     Shape.HTML.register({
       shape: 'custom-html',
       width: 130,
@@ -159,10 +203,24 @@ export function useGraph(container: HTMLDivElement, minimapContainer: HTMLDivEle
     graph.addEdge(edge2)
   }
 
+  // 创建指定类型的节点
+  const createNodeByType = (nodeType: string, x: number, y: number) => {
+    const nodeId = `node-${Date.now()}`
+    graph.addNode({
+      id: nodeId,
+      shape: `node-${nodeType}`,
+      x,
+      y,
+      zIndex: 2,
+    })
+    return nodeId
+  }
+
   return {
     graph,
     registerPlugins,
     registerNodeTypes,
     createNodes,
+    createNodeByType,
   }
 }

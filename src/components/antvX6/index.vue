@@ -13,10 +13,12 @@ const minimapContainer = ref<HTMLDivElement>()
 const { width, height } = useWindowSize()
 
 let graphInstance: any = null
+let createNodeByTypeFn: any = null
 
 onMounted(() => {
-  const { graph, registerPlugins, registerNodeTypes, createNodes } = useGraph(graphContainer.value!, minimapContainer.value!)
+  const { graph, registerPlugins, registerNodeTypes, createNodes, createNodeByType } = useGraph(graphContainer.value!, minimapContainer.value!)
   graphInstance = graph
+  createNodeByTypeFn = createNodeByType
   
   registerPlugins() // 对齐线 + 小地图
   registerNodeTypes() // 注册自定义节点类型 (html)
@@ -30,6 +32,19 @@ watch([width, height], ([newWidth, newHeight]) => {
     graphInstance.resize(newWidth, newHeight)
     graphInstance.centerContent()
   }
+})
+
+// 创建节点方法
+const createNode = (nodeType: string, x: number, y: number) => {
+  if (createNodeByTypeFn) {
+    return createNodeByTypeFn(nodeType, x, y)
+  }
+  return null
+}
+
+// 暴露方法给父组件
+defineExpose({
+  createNode
 })
 </script>
 <style scoped lang="less">
