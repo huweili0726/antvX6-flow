@@ -65,10 +65,8 @@ export function useGraph(container: HTMLDivElement, minimapContainer: HTMLDivEle
           const div = document.createElement('div')
           div.className = 'custom-html'
           div.innerHTML = `
-            <img src="${import.meta.env.BASE_URL}/src/assets/img/${image}" 
-                 style="width: 50px; height: 50px; object-fit: contain;" 
-                 alt="${name}" />
-            <span style="font-size: 12px; color: #333; margin-top: 4px;">${name}</span>
+            <img src="${import.meta.env.BASE_URL}/src/assets/img/${image}" alt="${name}" />
+            <span>${name}</span>
           `
           return div
         },
