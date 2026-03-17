@@ -376,19 +376,17 @@ export function useGraph() {
     })
   }
 
-  // 禁用画布交互（确定后锁定画布）
+  // 禁用画布所有交互（确定后锁定：画布拖拽、缩放、节点/连线移动）
   const disableGraphInteraction = () => {
     const graph = graphStore.getGraph()
     if (!graph) return
     
-    // 通过设置 options 来禁用交互
     graph.options.panning.enabled = false // 禁止拖拽画布
     graph.options.mousewheel.enabled = false // 禁止滚轮缩放
-    // 全局禁用节点和连线交互
-    graph.options.interacting = false
+    graph.options.interacting = false // 禁止节点和连线交互
   }
 
-  // 启用画布交互（编辑时解锁画布）
+  // 启用画布所有交互（编辑时解锁）
   const enableGraphInteraction = () => {
     const graph = graphStore.getGraph()
     if (!graph) return
