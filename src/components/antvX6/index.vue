@@ -13,12 +13,10 @@ const minimapContainer = ref<HTMLDivElement>()
 const { width, height } = useWindowSize()
 
 let graphInstance: any = null
-let resizeGraphFn: any = null
 
 onMounted(() => {
-  const { graph, registerPlugins, registerNodeTypes, createNodes, resizeGraph } = useGraph(graphContainer.value!, minimapContainer.value!)
+  const { graph, registerPlugins, registerNodeTypes, createNodes } = useGraph(graphContainer.value!, minimapContainer.value!)
   graphInstance = graph
-  resizeGraphFn = resizeGraph
   
   registerPlugins() // 对齐线 + 小地图
   registerNodeTypes() // 注册自定义节点类型 (html)
@@ -28,8 +26,9 @@ onMounted(() => {
 
 // 监听窗口大小变化
 watch([width, height], ([newWidth, newHeight]) => {
-  if (newWidth && newHeight && graphInstance && resizeGraphFn) {
-    resizeGraphFn(newWidth, newHeight)
+  if (graphInstance && newWidth && newHeight) {
+    graphInstance.resize(newWidth, newHeight)
+    graphInstance.centerContent()
   }
 })
 </script>
