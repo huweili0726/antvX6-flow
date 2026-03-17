@@ -1,3 +1,12 @@
+/**
+ * 图表逻辑封装钩子
+ * 
+ * @author huweili
+ * @email czxyhuweili@163.com
+ * @version 1.0.0
+ * @date 2026-03-18
+ * @description 封装 AntV X6 图表的核心逻辑，包括图表初始化、节点注册、连线配置、交互控制等功能
+ */
 import { Graph, Shape, Snapline, MiniMap } from '@antv/x6'
 import { v4 as uuidv4 } from 'uuid'
 import { useGraphStore } from '@/stores/graph'
