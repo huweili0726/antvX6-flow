@@ -23,7 +23,20 @@ import { useGraph } from '@/composables/useGraph'
 
 const graphContainerRef = ref<HTMLDivElement>()
 
-const { getGraphInstance, createNodeByType, getAllNodesData, getAllEdgesData, confirmNodeName, editNodeName, hideEdgeRemoveButtons, showEdgeRemoveButtons, hideNodePorts, showNodePorts, disableGraphInteraction, enableGraphInteraction } = useGraph()
+const { 
+  getGraphInstance, // 获取图表实例
+  createNodeByType, // 根据类型创建节点
+  getAllNodesData, // 获取所有节点数据
+  getAllEdgesData, // 获取所有连线数据
+  confirmNodeName, // 确认节点名称（退出编辑模式）
+  editNodeName, // 编辑节点名称（进入编辑模式）
+  hideEdgeRemoveButtons, // 隐藏所有连线的删除按钮
+  showEdgeRemoveButtons, // 显示所有连线的删除按钮
+  hideNodePorts, // 隐藏所有节点的锚点
+  showNodePorts, // 显示所有节点的锚点
+  disableGraphInteraction, // 禁用画布所有交互（锁定）
+  enableGraphInteraction // 启用画布所有交互（解锁）
+} = useGraph()
 
 // 处理节点拖动到图表上的事件
 const handleDrop = (event: DragEvent) => {
