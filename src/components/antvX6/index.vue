@@ -19,7 +19,7 @@ let editNodeNameFn: any = null
 let getAllNodesDataFn: any = null
 
 onMounted(() => {
-  const { graph, registerPlugins, registerNodeTypes, createNodes, createNodeByType, confirmNodeName, editNodeName, getAllNodesData } = useGraph(graphContainer.value!, minimapContainer.value!)
+  const { graph, registerPlugins, registerNodeTypes, createNodeByType, confirmNodeName, editNodeName, getAllNodesData } = useGraph(graphContainer.value!, minimapContainer.value!)
   graphInstance = graph
   createNodeByTypeFn = createNodeByType
   confirmNodeNameFn = confirmNodeName
