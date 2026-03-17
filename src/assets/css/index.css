@@ -1,5 +1,5 @@
 /* html节点样式 */
-.custom-html{
+.custom-html-node {
   width: 80px;
   height: 80px;
   display: flex;
@@ -9,7 +9,60 @@
   cursor: move;
   pointer-events: auto;
 }
-.custom-html-content{
+
+.custom-html-node > img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.custom-html-node .name-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.custom-html-node .name-container > span {
+  font-size: 10px;
+  color: #333;
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 70px;
+}
+
+.custom-html-node .node-name-input {
+  width: 70px;
+  font-size: 10px;
+  text-align: center;
+  border: 1px solid #42b883;
+  border-radius: 2px;
+  padding: 2px;
+  outline: none;
+  pointer-events: auto;
+}
+
+.custom-html-node .node-name-input:focus {
+  border-color: #3aa876;
+  box-shadow: 0 0 3px rgba(66, 184, 131, 0.3);
+}
+
+/* 旧样式（保留兼容） */
+.custom-html {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: move;
+  pointer-events: auto;
+}
+
+.custom-html-content {
   width: 100%;
   height: 100%;
   display: flex;
@@ -18,13 +71,15 @@
   border: 1px solid blue;
   background-color: aqua;
 }
-.custom-html>img{
+
+.custom-html > img {
   width: 40px;
   height: 40px;
   object-fit: contain;
   pointer-events: none;
 }
-.custom-html>span{
+
+.custom-html > span {
   font-size: 10px;
   color: #333;
   margin-top: 4px;

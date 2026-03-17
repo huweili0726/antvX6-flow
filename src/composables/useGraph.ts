@@ -42,18 +42,19 @@ export function useGraph(container: HTMLDivElement, minimapContainer: HTMLDivEle
     )
   }
 
+  // 节点类型配置（提取到外部以便复用）
+  const nodeTypes = [
+    { type: 'switch1', name: '一级交换机', image: '一级交换机@1x.png' },
+    { type: 'switch2', name: '二级交换机', image: '二级交换机@1x.png' },
+    { type: 'switch3', name: '三级交换机', image: '三级交换机@1x.png' },
+    { type: 'firewall', name: '防火墙', image: '防火墙@1x.png' },
+    { type: 'gateway', name: '网闸', image: '网闸@1x.png' },
+    { type: 'database', name: '数据库', image: '数据库@1x.png' },
+    { type: 'ip', name: '专网IP', image: '专网IP@1x.png' },
+  ]
+
   // 注册自定义节点类型
   const registerNodeTypes = () => {
-    // 节点类型配置
-    const nodeTypes = [
-      { type: 'switch1', name: '一级交换机', image: '一级交换机@1x.png' },
-      { type: 'switch2', name: '二级交换机', image: '二级交换机@1x.png' },
-      { type: 'switch3', name: '三级交换机', image: '三级交换机@1x.png' },
-      { type: 'firewall', name: '防火墙', image: '防火墙@1x.png' },
-      { type: 'gateway', name: '网闸', image: '网闸@1x.png' },
-      { type: 'database', name: '数据库', image: '数据库@1x.png' },
-      { type: 'ip', name: '专网IP', image: '专网IP@1x.png' },
-    ]
 
     // 注册所有节点类型
     nodeTypes.forEach(({ type, name, image }) => {
@@ -61,30 +62,54 @@ export function useGraph(container: HTMLDivElement, minimapContainer: HTMLDivEle
         shape: `node-${type}`,
         width: 80,
         height: 80,
-        html() {
+        html(cell) {
           const div = document.createElement('div')
-          div.className = 'custom-html'
-          div.innerHTML = `
-            <img src="${import.meta.env.BASE_URL}/src/assets/img/${image}" alt="${name}" />
-            <span>${name}</span>
-          `
+          div.className = 'custom-html-node'
+          
+          const img = document.createElement('img')
+          img.src = `${import.meta.env.BASE_URL}/src/assets/img/${image}`
+          img.alt = name
+          
+          const nameContainer = document.createElement('div')
+          nameContainer.className = 'name-container'
+          
+          const nodeData = cell.getData() || {}
+          const nodeName = nodeData.name || name
+          const isEditing = nodeData.isEditing !== false
+          
+          if (isEditing) {
+            const input = document.createElement('input')
+            input.type = 'text'
+            input.value = nodeName
+            input.className = 'node-name-input'
+            input.addEventListener('mousedown', (e) => e.stopPropagation())
+            input.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter') {
+                input.blur()
+              }
+            })
+            input.addEventListener('blur', (e) => {
+              const target = e.target as HTMLInputElement
+              const currentData = cell.getData() || {}
+              cell.setData({ ...currentData, name: target.value })
+            })
+            setTimeout(() => {
+              input.focus()
+              input.select()
+            }, 0)
+            nameContainer.appendChild(input)
+          } else {
+            const span = document.createElement('span')
+            span.textContent = nodeName
+            nameContainer.appendChild(span)
+          }
+          
+          div.appendChild(img)
+          div.appendChild(nameContainer)
           return div
         },
       })
     })
-
-    // 注册通用HTML节点类型
-    // Shape.HTML.register({
-    //   shape: 'custom-html',
-    //   width: 130,
-    //   height: 45,
-    //   html() {
-    //     const div = document.createElement('div')
-    //     div.className = 'custom-html'
-    //     div.innerHTML = '<div class="custom-html-content">html节点</div>'
-    //     return div
-    //   },
-    // })
   }
 
   // 创建节点和连线
@@ -191,14 +216,48 @@ export function useGraph(container: HTMLDivElement, minimapContainer: HTMLDivEle
   // 创建指定类型的节点
   const createNodeByType = (nodeType: string, x: number, y: number) => {
     const nodeId = `node-${Date.now()}`
-    graph.addNode({
+    // 获取节点类型的默认名称
+    const nodeTypeConfig = nodeTypes.find(n => n.type === nodeType)
+    const defaultName = nodeTypeConfig?.name || ''
+    
+    const node = graph.addNode({
       id: nodeId,
       shape: `node-${nodeType}`,
       x,
       y,
       zIndex: 2,
+      data: {
+        isEditing: true,      // 新创建的节点默认为编辑状态
+        name: defaultName     // 使用节点类型的默认名称
+      }
     })
-    return nodeId
+    return { nodeId, node }
+  }
+
+  // 确认节点名称（退出编辑状态）
+  const confirmNodeName = (nodeId: string) => {
+    const node = graph.getCellById(nodeId)
+    if (node) {
+      const currentData = node.getData() || {}
+      node.setData({ ...currentData, isEditing: false })
+    }
+  }
+
+  // 进入编辑状态
+  const editNodeName = (nodeId: string) => {
+    const node = graph.getCellById(nodeId)
+    if (node) {
+      const currentData = node.getData() || {}
+      node.setData({ ...currentData, isEditing: true })
+    }
+  }
+
+  // 获取所有节点数据
+  const getAllNodesData = () => {
+    return graph.getNodes().map(node => ({
+      id: node.id,
+      ...node.getData()
+    }))
   }
 
   return {
@@ -207,5 +266,8 @@ export function useGraph(container: HTMLDivElement, minimapContainer: HTMLDivEle
     registerNodeTypes,
     createNodes,
     createNodeByType,
+    confirmNodeName,
+    editNodeName,
+    getAllNodesData,
   }
 }

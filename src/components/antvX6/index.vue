@@ -14,11 +14,17 @@ const { width, height } = useWindowSize()
 
 let graphInstance: any = null
 let createNodeByTypeFn: any = null
+let confirmNodeNameFn: any = null
+let editNodeNameFn: any = null
+let getAllNodesDataFn: any = null
 
 onMounted(() => {
-  const { graph, registerPlugins, registerNodeTypes, createNodes, createNodeByType } = useGraph(graphContainer.value!, minimapContainer.value!)
+  const { graph, registerPlugins, registerNodeTypes, createNodes, createNodeByType, confirmNodeName, editNodeName, getAllNodesData } = useGraph(graphContainer.value!, minimapContainer.value!)
   graphInstance = graph
   createNodeByTypeFn = createNodeByType
+  confirmNodeNameFn = confirmNodeName
+  editNodeNameFn = editNodeName
+  getAllNodesDataFn = getAllNodesData
   
   registerPlugins() // 对齐线 + 小地图
   registerNodeTypes() // 注册自定义节点类型 (html)
@@ -47,10 +53,46 @@ const getGraph = () => {
   return graphInstance
 }
 
+// 确认节点名称（退出编辑状态）
+const confirmNodeName = (nodeId: string) => {
+  if (confirmNodeNameFn) {
+    confirmNodeNameFn(nodeId)
+  }
+}
+
+// 进入编辑状态
+const editNodeName = (nodeId: string) => {
+  if (editNodeNameFn) {
+    editNodeNameFn(nodeId)
+  }
+}
+
+// 获取所有节点数据
+const getAllNodesData = () => {
+  if (getAllNodesDataFn) {
+    return getAllNodesDataFn()
+  }
+  return []
+}
+
+// 确认所有节点（批量退出编辑状态）
+const confirmAllNodes = () => {
+  if (getAllNodesDataFn && confirmNodeNameFn) {
+    const nodes = getAllNodesDataFn()
+    nodes.forEach((node: any) => {
+      confirmNodeNameFn(node.id)
+    })
+  }
+}
+
 // 暴露方法给父组件
 defineExpose({
   createNode,
-  getGraph
+  getGraph,
+  confirmNodeName,
+  editNodeName,
+  getAllNodesData,
+  confirmAllNodes
 })
 </script>
 <style scoped lang="less">

@@ -157,12 +157,25 @@ const handleDragOver = (event: DragEvent) => {
 
 // 处理确定按钮点击
 const handleConfirm = () => {
-  console.log('确定按钮被点击')
+  if (antvX6Ref.value) {
+    // 确认所有节点，退出编辑状态
+    antvX6Ref.value.confirmAllNodes()
+    // 获取所有节点数据
+    const nodesData = antvX6Ref.value.getAllNodesData()
+    console.log('所有节点数据:', nodesData)
+  }
 }
 
 // 处理编辑按钮点击
 const handleEdit = () => {
-  console.log('编辑按钮被点击')
+  if (antvX6Ref.value) {
+    // 获取所有节点数据
+    const nodesData = antvX6Ref.value.getAllNodesData()
+    // 让所有节点进入编辑状态
+    nodesData.forEach((node: any) => {
+      antvX6Ref.value?.editNodeName(node.id)
+    })
+  }
 }
 </script>
 <style scoped lang="less">
