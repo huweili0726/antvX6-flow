@@ -384,10 +384,8 @@ export function useGraph() {
     // 通过设置 options 来禁用交互
     graph.options.panning.enabled = false // 禁止拖拽画布
     graph.options.mousewheel.enabled = false // 禁止滚轮缩放
-    // 禁止节点交互
-    graph.getNodes().forEach(node => {
-      node.setAttrs({ style: { pointerEvents: 'none' } })
-    })
+    // 全局禁用节点和连线交互
+    graph.options.interacting = false
   }
 
   // 启用画布交互（编辑时解锁画布）
@@ -397,10 +395,8 @@ export function useGraph() {
     
     graph.options.panning.enabled = true // 允许拖拽画布
     graph.options.mousewheel.enabled = true // 允许滚轮缩放
-    // 允许节点交互
-    graph.getNodes().forEach(node => {
-      node.setAttrs({ style: { pointerEvents: '' } })
-    })
+    // 全局启用节点和连线交互
+    graph.options.interacting = true
   }
 
   // 删除节点
