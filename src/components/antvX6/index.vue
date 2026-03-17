@@ -18,19 +18,19 @@ const {
   registerNodeTypes,
 } = useGraph()
 
-onMounted(() => {
-  // 初始化图 【 graph初始化 + 对齐线 + 小地图】
-  const graph = initGraph(graphContainer.value!, minimapContainer.value!)
-  registerNodeTypes()
-  graph.centerContent()
-})
-
 watch([width, height], ([newWidth, newHeight]) => {
   const graph = getGraphInstance()
   if (graph && newWidth && newHeight) {
     graph.resize(newWidth, newHeight)
     graph.centerContent()
   }
+})
+
+onMounted(() => {
+  // 初始化图 【 graph初始化 + 对齐线 + 小地图】
+  const graph = initGraph(graphContainer.value!, minimapContainer.value!)
+  registerNodeTypes()
+  graph.centerContent()
 })
 
 </script>
