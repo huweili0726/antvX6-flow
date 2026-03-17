@@ -61,6 +61,15 @@ export function useGraph() {
               },
             },
             zIndex: 1, // 层级：1（在节点下方）
+            tools: [ // 边上的工具按钮
+              {
+                name: 'button-remove', // 删除按钮
+                args: {
+                  distance: -40, // 按钮距离终点的距离（负数表示在连线上）
+                  offset: { x: 0, y: 0 }, // 偏移量
+                },
+              },
+            ],
           })
         },
       },
@@ -313,6 +322,34 @@ export function useGraph() {
     }))
   }
 
+  // 隐藏所有边的删除按钮
+  const hideEdgeRemoveButtons = () => {
+    const graph = graphStore.getGraph()
+    if (!graph) return
+    
+    graph.getEdges().forEach(edge => {
+      edge.removeTools()
+    })
+  }
+
+  // 显示所有边的删除按钮
+  const showEdgeRemoveButtons = () => {
+    const graph = graphStore.getGraph()
+    if (!graph) return
+    
+    graph.getEdges().forEach(edge => {
+      edge.addTools([
+        {
+          name: 'button-remove',
+          args: {
+            distance: -40,
+            offset: { x: 0, y: 0 },
+          },
+        },
+      ])
+    })
+  }
+
   // 删除节点
   const removeNode = (nodeId: string) => {
     const graph = graphStore.getGraph()
@@ -354,6 +391,8 @@ export function useGraph() {
     editNodeName,
     getAllNodesData,
     getAllEdgesData,
+    hideEdgeRemoveButtons,
+    showEdgeRemoveButtons,
     removeNode,
     removeEdge,
     clearGraph,

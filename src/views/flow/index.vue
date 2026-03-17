@@ -23,7 +23,7 @@ import { useGraph } from '@/composables/useGraph'
 
 const graphContainerRef = ref<HTMLDivElement>()
 
-const { getGraphInstance, createNodeByType, getAllNodesData, getAllEdgesData, confirmNodeName, editNodeName } = useGraph()
+const { getGraphInstance, createNodeByType, getAllNodesData, getAllEdgesData, confirmNodeName, editNodeName, hideEdgeRemoveButtons, showEdgeRemoveButtons } = useGraph()
 
 // 处理节点拖动到图表上的事件
 const handleDrop = (event: DragEvent) => {
@@ -56,6 +56,8 @@ const handleConfirm = () => {
     confirmNodeName(node.id)
   })
   
+  hideEdgeRemoveButtons()
+  
   const edges = getAllEdgesData()
   console.log('所有节点数据:', nodes)
   console.log('所有连线数据:', edges)
@@ -67,6 +69,8 @@ const handleEdit = () => {
   nodes.forEach((node: any) => {
     editNodeName(node.id)
   })
+  
+  showEdgeRemoveButtons()
 }
 </script>
 
