@@ -358,7 +358,7 @@ export function useGraph() {
     graph.getNodes().forEach(node => {
       const ports = node.getPorts()
       ports.forEach((port: any) => {
-        node.setPortProp(port.id, 'attrs/circle/style/display', 'none')
+        node.setPortProp(port.id, 'attrs/circle', { style: { display: 'none' } })
       })
     })
   }
@@ -371,7 +371,7 @@ export function useGraph() {
     graph.getNodes().forEach(node => {
       const ports = node.getPorts()
       ports.forEach((port: any) => {
-        node.setPortProp(port.id, 'attrs/circle/style/display', 'block')
+        node.setPortProp(port.id, 'attrs/circle', { style: { display: 'block' } })
       })
     })
   }
