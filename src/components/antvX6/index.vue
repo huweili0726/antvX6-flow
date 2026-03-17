@@ -42,9 +42,15 @@ const createNode = (nodeType: string, x: number, y: number) => {
   return null
 }
 
+// 获取 graph 实例方法
+const getGraph = () => {
+  return graphInstance
+}
+
 // 暴露方法给父组件
 defineExpose({
-  createNode
+  createNode,
+  getGraph
 })
 </script>
 <style scoped lang="less">

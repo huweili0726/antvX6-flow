@@ -1,6 +1,7 @@
 <template>
   <div class="home-container">
     <div 
+      ref="graphContainerRef"
       class="graph-container" 
       @drop="handleDrop" 
       @dragover="handleDragOver"
@@ -84,7 +85,9 @@ import AntvX6 from '@/components/antvX6/index.vue'
 
 const draggedNodeType = ref('')
 const antvX6Ref = ref<InstanceType<typeof AntvX6>>()
+const graphContainerRef = ref<HTMLDivElement>()
 
+// 处理节点拖拽开始事件
 const handleDragStart = (event: DragEvent) => {
   const target = event.target as HTMLElement
   const nodeElement = target.closest('.draggable-node')
@@ -94,20 +97,29 @@ const handleDragStart = (event: DragEvent) => {
   }
 }
 
+// 处理节点拖拽释放事件
 const handleDrop = (event: DragEvent) => {
   event.preventDefault()
   const nodeType = event.dataTransfer?.getData('nodeType')
-  if (nodeType && antvX6Ref.value) {
+  if (nodeType && antvX6Ref.value && graphContainerRef.value) {
     // 获取拖拽位置相对于图表容器的坐标
-    const rect = (event.target as HTMLElement).getBoundingClientRect()
-    const x = event.clientX - rect.left
-    const y = event.clientY - rect.top
+    const rect = graphContainerRef.value.getBoundingClientRect()
+    const clientX = event.clientX - rect.left
+    const clientY = event.clientY - rect.top
     
-    // 创建节点
-    antvX6Ref.value.createNode(nodeType, x, y)
+    // 将 DOM 坐标转换为画布坐标
+    const graph = antvX6Ref.value.getGraph()
+    if (graph) {
+      const localPoint = graph.clientToLocal({ x: clientX, y: clientY })
+      antvX6Ref.value.createNode(nodeType, localPoint.x, localPoint.y)
+    } else {
+      // 如果无法获取 graph，直接使用 DOM 坐标
+      antvX6Ref.value.createNode(nodeType, clientX, clientY)
+    }
   }
 }
 
+// 处理节点拖拽悬停事件
 const handleDragOver = (event: DragEvent) => {
   event.preventDefault()
 }
