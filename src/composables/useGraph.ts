@@ -1,4 +1,5 @@
 import { Graph, Shape, Snapline, MiniMap } from '@antv/x6'
+import { v4 as uuidv4 } from 'uuid'
 import { useGraphStore } from '@/stores/graph'
 
 /**
@@ -133,7 +134,7 @@ export function useGraph() {
     const graph = graphStore.getGraph()
     if (!graph) return null
     
-    const nodeId = `node-${Date.now()}`
+    const nodeId = `node_${uuidv4()}`
     const nodeTypeConfig = nodeTypes.find(n => n.type === nodeType)
     const defaultName = nodeTypeConfig?.name || ''
     
