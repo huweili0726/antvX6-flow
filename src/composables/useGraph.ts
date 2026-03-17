@@ -159,10 +159,19 @@ export function useGraph(container: HTMLDivElement, minimapContainer: HTMLDivEle
     graph.addEdge(edge2)
   }
 
+  // 调整画布大小
+  const resizeGraph = () => {
+    if (container && minimapContainer) {
+      graph.resize(container.clientWidth, container.clientHeight)
+      graph.centerContent()
+    }
+  }
+
   return {
     graph,
     registerPlugins,
     registerNodeTypes,
     createNodes,
+    resizeGraph,
   }
 }

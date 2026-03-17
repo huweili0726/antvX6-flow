@@ -4,19 +4,32 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
+import { useWindowSize } from '@vueuse/core'
 import { useGraph } from '@/composables/useGraph'
 
 const graphContainer = ref<HTMLDivElement>()
 const minimapContainer = ref<HTMLDivElement>()
+const { width, height } = useWindowSize()
+
+let graphInstance: any = null
 
 onMounted(() => {
-  const { graph, registerPlugins, registerNodeTypes, createNodes } = useGraph(graphContainer.value!, minimapContainer.value!)
+  const { graph, registerPlugins, registerNodeTypes, createNodes, resizeGraph } = useGraph(graphContainer.value!, minimapContainer.value!)
+  graphInstance = graph
   
   registerPlugins() // 对齐线 + 小地图
   registerNodeTypes() // 注册自定义节点类型 (html)
   createNodes() // 创建普通图片节点和连线
   graph.centerContent() // 将内容居中显示
+})
+
+// 监听窗口大小变化
+watch([width, height], ([newWidth, newHeight]) => {
+  if (graphInstance && newWidth && newHeight) {
+    graphInstance.resize(newWidth, newHeight)
+    graphInstance.centerContent()
+  }
 })
 </script>
 <style scoped lang="less">
