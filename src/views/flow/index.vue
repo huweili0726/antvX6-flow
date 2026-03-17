@@ -75,6 +75,10 @@
           <span>专网IP</span>
         </div>
       </div>
+      <div class="panel-footer">
+        <button class="btn btn-primary" @click="handleConfirm">确定</button>
+        <button class="btn btn-default" @click="handleEdit">编辑</button>
+      </div>
     </div>
   </div>
 </template>
@@ -150,6 +154,16 @@ const handleDrop = (event: DragEvent) => {
 const handleDragOver = (event: DragEvent) => {
   event.preventDefault()
 }
+
+// 处理确定按钮点击
+const handleConfirm = () => {
+  console.log('确定按钮被点击')
+}
+
+// 处理编辑按钮点击
+const handleEdit = () => {
+  console.log('编辑按钮被点击')
+}
 </script>
 <style scoped lang="less">
 .home-container {
@@ -188,6 +202,50 @@ const handleDragOver = (event: DragEvent) => {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.panel-footer {
+  padding: 15px;
+  border-top: 1px solid #ddd;
+  background: #fff;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.btn {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s;
+  
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.btn-primary {
+  background: #42b883;
+  color: white;
+  
+  &:hover {
+    background: #3aa876;
+  }
+}
+
+.btn-default {
+  background: #fff;
+  color: #333;
+  border: 1px solid #ddd;
+  
+  &:hover {
+    background: #f5f5f5;
+    border-color: #ccc;
+  }
 }
 
 .draggable-node {
