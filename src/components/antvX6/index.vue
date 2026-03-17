@@ -12,84 +12,37 @@ const graphContainer = ref<HTMLDivElement>()
 const minimapContainer = ref<HTMLDivElement>()
 const { width, height } = useWindowSize()
 
-let graphInstance: any = null
-let createNodeByTypeFn: any = null
-let confirmNodeNameFn: any = null
-let editNodeNameFn: any = null
-let getAllNodesDataFn: any = null
+const { 
+  initGraph, 
+  getGraphInstance, 
+  registerNodeTypes,
+  confirmNodeName, 
+  getAllNodesData 
+} = useGraph()
 
 onMounted(() => {
-  const { graph, registerPlugins, registerNodeTypes, createNodeByType, confirmNodeName, editNodeName, getAllNodesData } = useGraph(graphContainer.value!, minimapContainer.value!)
-  graphInstance = graph
-  createNodeByTypeFn = createNodeByType
-  confirmNodeNameFn = confirmNodeName
-  editNodeNameFn = editNodeName
-  getAllNodesDataFn = getAllNodesData
-  
-  registerPlugins() // 对齐线 + 小地图
-  registerNodeTypes() // 注册自定义节点类型 (html)
-  graph.centerContent() // 将内容居中显示
+  const graph = initGraph(graphContainer.value!, minimapContainer.value!)
+  registerNodeTypes()
+  graph.centerContent()
 })
 
-// 监听窗口大小变化
 watch([width, height], ([newWidth, newHeight]) => {
-  if (graphInstance && newWidth && newHeight) {
-    graphInstance.resize(newWidth, newHeight)
-    graphInstance.centerContent()
+  const graph = getGraphInstance()
+  if (graph && newWidth && newHeight) {
+    graph.resize(newWidth, newHeight)
+    graph.centerContent()
   }
 })
 
-// 创建节点方法
-const createNode = (nodeType: string, x: number, y: number) => {
-  if (createNodeByTypeFn) {
-    return createNodeByTypeFn(nodeType, x, y)
-  }
-  return null
-}
-
-// 获取 graph 实例方法
-const getGraph = () => {
-  return graphInstance
-}
-
-// 确认节点名称（退出编辑状态）
-const confirmNodeName = (nodeId: string) => {
-  if (confirmNodeNameFn) {
-    confirmNodeNameFn(nodeId)
-  }
-}
-
-// 进入编辑状态
-const editNodeName = (nodeId: string) => {
-  if (editNodeNameFn) {
-    editNodeNameFn(nodeId)
-  }
-}
-
-// 获取所有节点数据
-const getAllNodesData = () => {
-  if (getAllNodesDataFn) {
-    return getAllNodesDataFn()
-  }
-  return []
-}
-
-// 确认所有节点（批量退出编辑状态）
 const confirmAllNodes = () => {
-  if (getAllNodesDataFn && confirmNodeNameFn) {
-    const nodes = getAllNodesDataFn()
-    nodes.forEach((node: any) => {
-      confirmNodeNameFn(node.id)
-    })
-  }
+  const nodes = getAllNodesData()
+  nodes.forEach((node: any) => {
+    confirmNodeName(node.id)
+  })
 }
 
-// 暴露方法给父组件
 defineExpose({
-  createNode,
-  getGraph,
   confirmNodeName,
-  editNodeName,
   getAllNodesData,
   confirmAllNodes
 })

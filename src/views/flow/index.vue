@@ -86,96 +86,65 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import AntvX6 from '@/components/antvX6/index.vue'
+import { useGraph } from '@/composables/useGraph'
 
-const draggedNodeType = ref('')
-const antvX6Ref = ref<InstanceType<typeof AntvX6>>()
 const graphContainerRef = ref<HTMLDivElement>()
 
-// 处理节点拖拽开始事件
+const { 
+  getGraphInstance, 
+  createNodeByType, 
+  confirmNodeName, 
+  editNodeName, 
+  getAllNodesData 
+} = useGraph()
+
 const handleDragStart = (event: DragEvent) => {
   const target = event.target as HTMLElement
   const nodeElement = target.closest('.draggable-node')
   if (nodeElement) {
-    draggedNodeType.value = nodeElement.getAttribute('data-type') || ''
-    // event.dataTransfer : 拖拽数据传输对象，用于在拖拽过程中存储和传递数据
-    event.dataTransfer?.setData('nodeType', draggedNodeType.value)
+    const nodeType = nodeElement.getAttribute('data-type') || ''
+    event.dataTransfer?.setData('nodeType', nodeType)
   }
 }
 
-/**
- * 处理节点拖拽释放事件
- * 当用户从操作面板拖拽节点到画布区域并释放时触发
- * @param event - 拖拽事件对象，包含拖拽相关信息
- */
 const handleDrop = (event: DragEvent) => {
-  // 阻止浏览器默认行为（防止打开链接等默认拖拽行为）
   event.preventDefault()
   
-  // 从拖拽数据中获取节点类型（在 handleDragStart 中设置的）
   const nodeType = event.dataTransfer?.getData('nodeType')
   
-  // 检查必要条件：节点类型存在、AntV X6 组件实例存在、图表容器存在
-  if (nodeType && antvX6Ref.value && graphContainerRef.value) {
-    
-    // ========== 步骤1：获取容器的位置信息 ==========
-    // getBoundingClientRect() 返回元素相对于视口的位置和尺寸信息
-    // 包含：left, top, right, bottom, width, height
+  if (nodeType && graphContainerRef.value) {
     const rect = graphContainerRef.value.getBoundingClientRect()
+    const clientX = event.clientX - rect.left
+    const clientY = event.clientY - rect.top
     
-    // ========== 步骤2：计算鼠标相对于容器的坐标 ==========
-    // event.clientX/Y 是鼠标相对于浏览器视口的坐标
-    // 减去 rect.left/top 得到相对于 graph-container 的坐标
-    const clientX = event.clientX - rect.left  // 鼠标在容器内的 X 坐标
-    const clientY = event.clientY - rect.top   // 鼠标在容器内的 Y 坐标
+    const graph = getGraphInstance()
     
-    // ========== 步骤3：获取 AntV X6 图表实例 ==========
-    // 通过组件暴露的 getGraph 方法获取图表实例
-    const graph = antvX6Ref.value.getGraph()
-    
-    // ========== 步骤4：坐标转换并创建节点 ==========
     if (graph) {
-      // clientToLocal() 将 DOM 坐标转换为画布本地坐标
-      // 因为画布可能有缩放、平移，DOM 坐标和画布坐标系不一致
-      // 例如：画布缩放 50% 后，DOM 坐标 (100, 100) 对应画布坐标 (200, 200)
       const localPoint = graph.clientToLocal({ x: clientX, y: clientY })
-      
-      // 调用组件的 createNode 方法创建节点
-      // 参数：节点类型、X坐标、Y坐标
-      antvX6Ref.value.createNode(nodeType, localPoint.x, localPoint.y)
+      createNodeByType(nodeType, localPoint.x, localPoint.y)
     } else {
-      // 降级处理：如果无法获取图表实例，直接使用 DOM 坐标创建节点
-      // 这种情况通常发生在图表未初始化完成时
-      antvX6Ref.value.createNode(nodeType, clientX, clientY)
+      createNodeByType(nodeType, clientX, clientY)
     }
   }
 }
 
-// 处理节点拖拽悬停事件
 const handleDragOver = (event: DragEvent) => {
   event.preventDefault()
 }
 
-// 处理确定按钮点击
 const handleConfirm = () => {
-  if (antvX6Ref.value) {
-    // 确认所有节点，退出编辑状态
-    antvX6Ref.value.confirmAllNodes()
-    // 获取所有节点数据
-    const nodesData = antvX6Ref.value.getAllNodesData()
-    console.log('所有节点数据:', nodesData)
-  }
+  const nodes = getAllNodesData()
+  nodes.forEach((node: any) => {
+    confirmNodeName(node.id)
+  })
+  console.log('所有节点数据:', nodes)
 }
 
-// 处理编辑按钮点击
 const handleEdit = () => {
-  if (antvX6Ref.value) {
-    // 获取所有节点数据
-    const nodesData = antvX6Ref.value.getAllNodesData()
-    // 让所有节点进入编辑状态
-    nodesData.forEach((node: any) => {
-      antvX6Ref.value?.editNodeName(node.id)
-    })
-  }
+  const nodes = getAllNodesData()
+  nodes.forEach((node: any) => {
+    editNodeName(node.id)
+  })
 }
 </script>
 <style scoped lang="less">

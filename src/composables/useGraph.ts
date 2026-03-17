@@ -1,29 +1,31 @@
 import { Graph, Shape, Snapline, MiniMap } from '@antv/x6'
+import { useGraphStore } from '@/stores/graph'
 
 /**
  * 图表逻辑封装钩子
- * @param container 图表容器
- * @param minimapContainer 小地图容器
  */
-export function useGraph(container: HTMLDivElement, minimapContainer: HTMLDivElement) {
-  // 初始化图表
-  const graph = new Graph({
-    container,
-    width: container.clientWidth || 800,
-    height: container.clientHeight || 600,
-    grid: true,
-    panning: {
-      enabled: true, // 普通画布(未开启 scroller 模式)通过开启 panning 选项来支持拖拽平移
-      eventTypes: ['leftMouseDown', 'rightMouseDown', 'mouseWheel']
-    },
-    mousewheel: {
-      enabled: true, // 启用鼠标滚轮功能
-      modifiers: ['ctrl', 'meta'], //指定需要按住的修饰键，只有当按住 Ctrl 键（Windows/Linux）或 Meta 键（Mac）时，鼠标滚轮才能控制画布的缩放
-    }
-  })
+export function useGraph() {
 
-  // 注册图表插件
-  const registerPlugins = () => {
+  const graphStore = useGraphStore()
+  
+  // 初始化图表
+  const initGraph = (container: HTMLDivElement, minimapContainer: HTMLDivElement) => {
+    // 初始化图表
+    const graph = new Graph({
+      container,
+      width: container.clientWidth || 800,
+      height: container.clientHeight || 600,
+      grid: true,
+      panning: {
+        enabled: true,
+        eventTypes: ['leftMouseDown', 'rightMouseDown', 'mouseWheel']
+      },
+      mousewheel: {
+        enabled: true,
+        modifiers: ['ctrl', 'meta'],
+      }
+    })
+
     // 对齐线
     graph.use(
       new Snapline({
@@ -40,6 +42,16 @@ export function useGraph(container: HTMLDivElement, minimapContainer: HTMLDivEle
         padding: 0,
       }),
     )
+
+    // 将 graph 实例存储到 Pinia store
+    graphStore.setGraph(graph)
+    
+    return graph
+  }
+
+  // 获取图表实例
+  const getGraphInstance = () => {
+    return graphStore.getGraph()
   }
 
   // 节点类型配置（提取到外部以便复用）
@@ -55,7 +67,11 @@ export function useGraph(container: HTMLDivElement, minimapContainer: HTMLDivEle
 
   // 注册自定义节点类型
   const registerNodeTypes = () => {
-
+    const graph = graphStore.getGraph()
+    if (!graph) {
+      throw new Error('图表实例未初始化')
+    }
+    
     // 注册所有节点类型
     nodeTypes.forEach(({ type, name, image }) => {
       Shape.HTML.register({
@@ -114,8 +130,10 @@ export function useGraph(container: HTMLDivElement, minimapContainer: HTMLDivEle
 
   // 创建指定类型的节点
   const createNodeByType = (nodeType: string, x: number, y: number) => {
+    const graph = graphStore.getGraph()
+    if (!graph) return null
+    
     const nodeId = `node-${Date.now()}`
-    // 获取节点类型的默认名称
     const nodeTypeConfig = nodeTypes.find(n => n.type === nodeType)
     const defaultName = nodeTypeConfig?.name || ''
     
@@ -126,33 +144,47 @@ export function useGraph(container: HTMLDivElement, minimapContainer: HTMLDivEle
       y,
       zIndex: 2,
       data: {
-        isEditing: true,      // 新创建的节点默认为编辑状态
-        name: defaultName     // 使用节点类型的默认名称
+        isEditing: true,
+        name: defaultName
       }
     })
+    
+    graphStore.addNode({ id: nodeId, type: nodeType, name: defaultName })
+    
     return { nodeId, node }
   }
 
   // 确认节点名称（退出编辑状态）
   const confirmNodeName = (nodeId: string) => {
+    const graph = graphStore.getGraph()
+    if (!graph) return
+    
     const node = graph.getCellById(nodeId)
     if (node) {
       const currentData = node.getData() || {}
       node.setData({ ...currentData, isEditing: false })
+      graphStore.updateNode(nodeId, { isEditing: false, name: currentData.name })
     }
   }
 
   // 进入编辑状态
   const editNodeName = (nodeId: string) => {
+    const graph = graphStore.getGraph()
+    if (!graph) return
+    
     const node = graph.getCellById(nodeId)
     if (node) {
       const currentData = node.getData() || {}
       node.setData({ ...currentData, isEditing: true })
+      graphStore.updateNode(nodeId, { isEditing: true })
     }
   }
 
   // 获取所有节点数据
   const getAllNodesData = () => {
+    const graph = graphStore.getGraph()
+    if (!graph) return []
+    
     return graph.getNodes().map(node => ({
       id: node.id,
       ...node.getData()
@@ -160,8 +192,8 @@ export function useGraph(container: HTMLDivElement, minimapContainer: HTMLDivEle
   }
 
   return {
-    graph,
-    registerPlugins,
+    initGraph,
+    getGraphInstance,
     registerNodeTypes,
     createNodeByType,
     confirmNodeName,
