@@ -26,11 +26,15 @@ export function useGraph() {
       },
       connecting: {
         anchor: 'center',
-        connectionPoint: 'anchor',
+        connectionPoint: 'boundary',
         allowBlank: false,
         allowLoop: false,
         highlight: true,
-        snap: true,
+        snap: {
+          radius: 20, // 自动吸附 : 连线会自动吸附到最近的连接桩（半径 20px）
+        },
+        allowNode: false,
+        allowEdge: false,
         createEdge() {
           return new Shape.Edge({
             attrs: {
@@ -44,9 +48,16 @@ export function useGraph() {
               },
             },
             router: {
-              name: 'orth',
+              name: 'manhattan', // 智能路由 : 曼哈顿路由会自动避开节点
               args: {
-                padding: 10,
+                padding: 20,
+                maxDirectionChange: 90,
+              },
+            },
+            connector: {
+              name: 'rounded', // 圆角连线 : 拐角处有圆角，更加美观
+              args: {
+                radius: 8,
               },
             },
             zIndex: 1,
