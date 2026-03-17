@@ -15,7 +15,7 @@ const { width, height } = useWindowSize()
 let graphInstance: any = null
 
 onMounted(() => {
-  const { graph, registerPlugins, registerNodeTypes, createNodes, resizeGraph } = useGraph(graphContainer.value!, minimapContainer.value!)
+  const { graph, registerPlugins, registerNodeTypes, createNodes } = useGraph(graphContainer.value!, minimapContainer.value!)
   graphInstance = graph
   
   registerPlugins() // 对齐线 + 小地图
