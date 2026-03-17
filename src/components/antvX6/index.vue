@@ -100,31 +100,45 @@ onMounted(() => {
     zIndex: 2,
   })
 
-  // 创建连线
+  // 创建折线拐弯的连线
   const edge1 = graph.addEdge({
     id: 'edge1',
     shape: 'edge',
     source: 'node1', 
     target: 'html1',
     labels: ['通信中'],
+    router: { 
+      name: 'orth',
+      args: { 
+        padding: 10
+      }
+    },
     attrs: {
       line: {
-        stroke: "#7c68fc", // 指定 path 元素的填充色
+        stroke: "#79AACD", // 指定 path 元素的填充色
+        strokeWidth: 2,
       },
     },
     zIndex: 1,
   })
 
-  // 创建另一条连线
+  // 创建另一条折线拐弯的连线
   const edge2 = graph.addEdge({
     id: 'edge2',
     shape: 'edge',
     source: 'html1', 
     target: 'node2',
     labels: ['连接'],
+    router: { 
+      name: 'orth',
+      args: { 
+        padding: 10
+      }
+    },
     attrs: {
       line: {
-        stroke: "#42b883", // 指定 path 元素的填充色
+        stroke: "#79AACD", // 指定 path 元素的填充色
+        strokeWidth: 2,
       },
     },
     zIndex: 1,
