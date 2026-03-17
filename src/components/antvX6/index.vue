@@ -16,8 +16,6 @@ const {
   initGraph, 
   getGraphInstance, 
   registerNodeTypes,
-  confirmNodeName, 
-  getAllNodesData 
 } = useGraph()
 
 onMounted(() => {
@@ -34,18 +32,6 @@ watch([width, height], ([newWidth, newHeight]) => {
   }
 })
 
-const confirmAllNodes = () => {
-  const nodes = getAllNodesData()
-  nodes.forEach((node: any) => {
-    confirmNodeName(node.id)
-  })
-}
-
-defineExpose({
-  confirmNodeName,
-  getAllNodesData,
-  confirmAllNodes
-})
 </script>
 <style scoped lang="less">
 .flow-container {

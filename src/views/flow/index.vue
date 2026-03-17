@@ -98,6 +98,7 @@ const {
   getAllNodesData 
 } = useGraph()
 
+// 处理拖动开始事件
 const handleDragStart = (event: DragEvent) => {
   const target = event.target as HTMLElement
   const nodeElement = target.closest('.draggable-node')
@@ -107,18 +108,16 @@ const handleDragStart = (event: DragEvent) => {
   }
 }
 
+// 处理拖动结束事件
 const handleDrop = (event: DragEvent) => {
   event.preventDefault()
-  
   const nodeType = event.dataTransfer?.getData('nodeType')
-  
   if (nodeType && graphContainerRef.value) {
     const rect = graphContainerRef.value.getBoundingClientRect()
     const clientX = event.clientX - rect.left
     const clientY = event.clientY - rect.top
     
     const graph = getGraphInstance()
-    
     if (graph) {
       const localPoint = graph.clientToLocal({ x: clientX, y: clientY })
       createNodeByType(nodeType, localPoint.x, localPoint.y)
@@ -128,10 +127,12 @@ const handleDrop = (event: DragEvent) => {
   }
 }
 
+// 处理拖动悬停事件
 const handleDragOver = (event: DragEvent) => {
   event.preventDefault()
 }
 
+// 处理确认按钮点击事件
 const handleConfirm = () => {
   const nodes = getAllNodesData()
   nodes.forEach((node: any) => {
@@ -140,6 +141,7 @@ const handleConfirm = () => {
   console.log('所有节点数据:', nodes)
 }
 
+// 处理编辑按钮点击事件
 const handleEdit = () => {
   const nodes = getAllNodesData()
   nodes.forEach((node: any) => {
