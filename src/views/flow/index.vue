@@ -1,0 +1,202 @@
+<template>
+  <div class="home-container">
+    <div 
+      class="graph-container" 
+      @drop="handleDrop" 
+      @dragover="handleDragOver"
+    >
+      <AntvX6 />
+    </div>
+    <div class="operation-panel">
+      <div class="panel-title">操作面板</div>
+      <div class="panel-content">
+        <div 
+          class="draggable-node" 
+          draggable="true" 
+          data-type="switch1"
+          @dragstart="handleDragStart"
+        >
+          <img src="@/assets/img/一级交换机@1x.png" alt="一级交换机" />
+          <span>一级交换机</span>
+        </div>
+        <div 
+          class="draggable-node" 
+          draggable="true" 
+          data-type="switch2"
+          @dragstart="handleDragStart"
+        >
+          <img src="@/assets/img/二级交换机@1x.png" alt="二级交换机" />
+          <span>二级交换机</span>
+        </div>
+        <div 
+          class="draggable-node" 
+          draggable="true" 
+          data-type="switch3"
+          @dragstart="handleDragStart"
+        >
+          <img src="@/assets/img/三级交换机@1x.png" alt="三级交换机" />
+          <span>三级交换机</span>
+        </div>
+        <div 
+          class="draggable-node" 
+          draggable="true" 
+          data-type="firewall"
+          @dragstart="handleDragStart"
+        >
+          <img src="@/assets/img/防火墙@1x.png" alt="防火墙" />
+          <span>防火墙</span>
+        </div>
+        <div 
+          class="draggable-node" 
+          draggable="true" 
+          data-type="gateway"
+          @dragstart="handleDragStart"
+        >
+          <img src="@/assets/img/网闸@1x.png" alt="网闸" />
+          <span>网闸</span>
+        </div>
+        <div 
+          class="draggable-node" 
+          draggable="true" 
+          data-type="database"
+          @dragstart="handleDragStart"
+        >
+          <img src="@/assets/img/数据库@1x.png" alt="数据库" />
+          <span>数据库</span>
+        </div>
+        <div 
+          class="draggable-node" 
+          draggable="true" 
+          data-type="ip"
+          @dragstart="handleDragStart"
+        >
+          <img src="@/assets/img/专网IP@1x.png" alt="专网IP" />
+          <span>专网IP</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import AntvX6 from '@/components/antvX6/index.vue'
+
+const draggedNodeType = ref('')
+
+const handleDragStart = (event: DragEvent) => {
+  const target = event.target as HTMLElement
+  const nodeElement = target.closest('.draggable-node')
+  if (nodeElement) {
+    draggedNodeType.value = nodeElement.getAttribute('data-type') || ''
+    event.dataTransfer?.setData('nodeType', draggedNodeType.value)
+  }
+}
+
+const handleDrop = (event: DragEvent) => {
+  event.preventDefault()
+  const nodeType = event.dataTransfer?.getData('nodeType')
+  if (nodeType) {
+    // 这里可以调用AntvX6组件的方法来添加节点
+    console.log('拖拽的节点类型:', nodeType)
+  }
+}
+
+const handleDragOver = (event: DragEvent) => {
+  event.preventDefault()
+}
+</script>
+<style scoped lang="less">
+.home-container {
+  position: relative;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.graph-container {
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
+}
+
+.operation-panel {
+  width: 200px;
+  height: 100%;
+  background: #f5f5f5;
+  border-left: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-title {
+  padding: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
+  background: #fff;
+}
+
+.panel-content {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.draggable-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: move;
+  transition: all 0.3s;
+  user-select: none;
+
+  &:hover {
+    border-color: #42b883;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    margin-bottom: 5px;
+  }
+
+  span {
+    font-size: 12px;
+    color: #333;
+    text-align: center;
+  }
+}
+
+.action-btn {
+  padding: 10px 15px;
+  border: none;
+  background: #42b883;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s;
+
+  &:hover {
+    background: #3aa876;
+  }
+
+  &:active {
+    background: #359670;
+  }
+}
+</style>

@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomePage from '@/views/HomePage.vue'
+import FlowPage from '@/views/flow/index.vue'
 import AboutPage from '@/views/AboutPage.vue'
 
 const routes = [
   {
     path: '/flow',
     name: 'home',
-    component: HomePage
+    component: FlowPage
   },
   {
     path: '/about',
