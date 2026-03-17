@@ -11,7 +11,6 @@ export function useGraph() {
   
   // 初始化图表
   const initGraph = (container: HTMLDivElement, minimapContainer: HTMLDivElement) => {
-    // 初始化图表
     const graph = new Graph({
       container,
       width: container.clientWidth || 800,
@@ -24,7 +23,48 @@ export function useGraph() {
       mousewheel: {
         enabled: true,
         modifiers: ['ctrl', 'meta'],
-      }
+      },
+      connecting: {
+        anchor: 'center',
+        connectionPoint: 'anchor',
+        allowBlank: false,
+        allowLoop: false,
+        highlight: true,
+        snap: true,
+        createEdge() {
+          return new Shape.Edge({
+            attrs: {
+              line: {
+                stroke: '#79AACD',
+                strokeWidth: 2,
+                targetMarker: {
+                  name: 'classic',
+                  size: 8,
+                },
+              },
+            },
+            router: {
+              name: 'orth',
+              args: {
+                padding: 10,
+              },
+            },
+            zIndex: 1,
+          })
+        },
+      },
+      highlighting: {
+        magnetAvailable: {
+          name: 'stroke',
+          args: {
+            attrs: {
+              fill: '#fff',
+              stroke: '#47C769',
+              strokeWidth: 4,
+            },
+          },
+        },
+      },
     })
 
     // 对齐线
@@ -79,6 +119,64 @@ export function useGraph() {
         shape: `node-${type}`,
         width: 80,
         height: 80,
+        ports: {
+          groups: {
+            top: {
+              position: 'top',
+              attrs: {
+                circle: {
+                  r: 4,
+                  magnet: true,
+                  stroke: '#79AACD',
+                  strokeWidth: 2,
+                  fill: '#fff',
+                },
+              },
+            },
+            right: {
+              position: 'right',
+              attrs: {
+                circle: {
+                  r: 4,
+                  magnet: true,
+                  stroke: '#79AACD',
+                  strokeWidth: 2,
+                  fill: '#fff',
+                },
+              },
+            },
+            bottom: {
+              position: 'bottom',
+              attrs: {
+                circle: {
+                  r: 4,
+                  magnet: true,
+                  stroke: '#79AACD',
+                  strokeWidth: 2,
+                  fill: '#fff',
+                },
+              },
+            },
+            left: {
+              position: 'left',
+              attrs: {
+                circle: {
+                  r: 4,
+                  magnet: true,
+                  stroke: '#79AACD',
+                  strokeWidth: 2,
+                  fill: '#fff',
+                },
+              },
+            },
+          },
+          items: [
+            { id: 'top', group: 'top' },
+            { id: 'right', group: 'right' },
+            { id: 'bottom', group: 'bottom' },
+            { id: 'left', group: 'left' },
+          ],
+        },
         html(cell) {
           const div = document.createElement('div')
           div.className = 'custom-html-node'
@@ -192,6 +290,50 @@ export function useGraph() {
     }))
   }
 
+  // 获取所有连线数据
+  const getAllEdgesData = () => {
+    const graph = graphStore.getGraph()
+    if (!graph) return []
+    
+    return graph.getEdges().map(edge => ({
+      id: edge.id,
+      source: edge.getSourceCellId(),
+      target: edge.getTargetCellId(),
+    }))
+  }
+
+  // 删除节点
+  const removeNode = (nodeId: string) => {
+    const graph = graphStore.getGraph()
+    if (!graph) return
+    
+    const node = graph.getCellById(nodeId)
+    if (node) {
+      graph.removeCell(node)
+      graphStore.removeNode(nodeId)
+    }
+  }
+
+  // 删除连线
+  const removeEdge = (edgeId: string) => {
+    const graph = graphStore.getGraph()
+    if (!graph) return
+    
+    const edge = graph.getCellById(edgeId)
+    if (edge) {
+      graph.removeCell(edge)
+    }
+  }
+
+  // 清空画布
+  const clearGraph = () => {
+    const graph = graphStore.getGraph()
+    if (!graph) return
+    
+    graph.clearCells()
+    graphStore.clearGraph()
+  }
+
   return {
     initGraph,
     getGraphInstance,
@@ -200,5 +342,9 @@ export function useGraph() {
     confirmNodeName,
     editNodeName,
     getAllNodesData,
+    getAllEdgesData,
+    removeNode,
+    removeEdge,
+    clearGraph,
   }
 }

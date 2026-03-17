@@ -50,6 +50,32 @@
   box-shadow: 0 0 3px rgba(66, 184, 131, 0.3);
 }
 
+/* 连接桩样式 */
+.x6-port {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.x6-node:hover .x6-port {
+  opacity: 1;
+}
+
+.x6-port-body {
+  cursor: crosshair;
+}
+
+/* 连线样式 */
+.x6-edge:hover path {
+  stroke: #1890ff;
+  stroke-width: 3px;
+}
+
+/* 连线选中样式 */
+.x6-edge-selected path {
+  stroke: #1890ff;
+  stroke-width: 3px;
+}
+
 /* 旧样式（保留兼容） */
 .custom-html {
   width: 80px;
