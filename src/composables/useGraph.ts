@@ -63,20 +63,7 @@ export function useGraph(container: HTMLDivElement, minimapContainer: HTMLDivEle
         height: 80,
         html() {
           const div = document.createElement('div')
-          div.className = 'custom-node'
-          div.style.cssText = `
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 5px;
-            box-sizing: border-box;
-          `
+          div.className = 'custom-html'
           div.innerHTML = `
             <img src="${import.meta.env.BASE_URL}/src/assets/img/${image}" 
                  style="width: 50px; height: 50px; object-fit: contain;" 
