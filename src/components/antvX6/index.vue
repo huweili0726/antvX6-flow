@@ -19,6 +19,7 @@ const {
 } = useGraph()
 
 onMounted(() => {
+  // 初始化图 【 graph初始化 + 对齐线 + 小地图】
   const graph = initGraph(graphContainer.value!, minimapContainer.value!)
   registerNodeTypes()
   graph.centerContent()
