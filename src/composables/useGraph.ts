@@ -257,11 +257,11 @@ export function useGraph() {
   }
 
   // 创建指定类型的节点
-  const createNodeByType = (nodeType: string, x: number, y: number) => {
+  const createNodeByType = (nodeType: string, x: number, y: number, id?: string) => {
     const graph = graphStore.getGraph()
     if (!graph) return null
     
-    const nodeId = `node_${uuidv4()}`
+    const nodeId = id || `node_${uuidv4()}`
     const nodeTypeConfig = nodeTypes.find(n => n.type === nodeType)
     const defaultName = nodeTypeConfig?.name || ''
     
@@ -414,6 +414,65 @@ export function useGraph() {
     graph.options.interacting = true
   }
 
+  // 加载图数据（用于回显）
+  const loadGraphData = (nodesData: any[], edgesData: any[]) => {
+    const graph = graphStore.getGraph()
+    if (!graph) return
+    
+    // 清空画布
+    graph.clearCells()
+    
+    // 存储节点映射
+    const nodeMap = new Map<string, any>()
+    
+    // 创建节点
+    nodesData.forEach(nodeData => {
+      // 从节点数据中提取类型（根据 ID 推断）
+      let nodeType = 'switch1' // 默认类型
+      if (nodeData.name.includes('类型2')) {
+        nodeType = 'switch2'
+      } else if (nodeData.name.includes('类型3')) {
+        nodeType = 'switch3'
+      } else if (nodeData.name.includes('防火墙')) {
+        nodeType = 'firewall'
+      } else if (nodeData.name.includes('网闸')) {
+        nodeType = 'gateway'
+      } else if (nodeData.name.includes('数据库')) {
+        nodeType = 'database'
+      } else if (nodeData.name.includes('专网IP')) {
+        nodeType = 'ip'
+      }
+      
+      // 创建节点
+      const nodeResult = createNodeByType(nodeType, nodeData.x, nodeData.y, nodeData.id)
+      if (nodeResult && nodeResult.node) {
+        // 设置节点名称
+        const node = nodeResult.node
+        const currentData = node.getData() || {}
+        node.setData({ ...currentData, name: nodeData.name })
+        nodeMap.set(nodeData.id, node)
+      }
+    })
+    
+    // 创建连线
+    edgesData.forEach(edgeData => {
+      const sourceNode = nodeMap.get(edgeData.source)
+      const targetNode = nodeMap.get(edgeData.target)
+      
+      if (sourceNode && targetNode) {
+        // 创建连线
+        graph.addEdge({
+          source: { cell: sourceNode.id, port: 'right' },
+          target: { cell: targetNode.id, port: 'left' },
+          zIndex: 1,
+        })
+      }
+    })
+    
+    // 居中显示
+    graph.centerContent()
+  }
+
   // 删除节点
   const removeNode = (nodeId: string) => {
     const graph = graphStore.getGraph()
@@ -464,5 +523,6 @@ export function useGraph() {
     removeNode,
     removeEdge,
     clearGraph,
+    loadGraphData, // 加载图数据（用于回显）
   }
 }
