@@ -27,7 +27,6 @@ export function useGraph() {
         viewBox: '0 0 1024 1024',
         width: 16,
         height: 16,
-        transform: 'translate(-50%, -50%)',
         style: 'cursor: pointer;',
       },
       children: [
@@ -66,6 +65,17 @@ export function useGraph() {
     }
   }
 
+  // 查看按钮的配置（复用）
+  const viewButtonConfig = {
+    name: 'button',
+    args: {
+      markup: viewButtonMarkup,
+      distance: -80,
+      offset: { x: 0, y: 0 },
+      onClick: viewButtonClickHandler,
+    },
+  }
+
   // 边（连线）的默认配置
   const defaultEdgeConfig = {
     attrs: {
@@ -93,15 +103,7 @@ export function useGraph() {
     },
     zIndex: 1,
     tools: [
-      {
-        name: 'button',
-        args: {
-          markup: viewButtonMarkup,
-          distance: -80,
-          offset: { x: 0, y: 0 },
-          onClick: viewButtonClickHandler,
-        },
-      },
+      viewButtonConfig,
       {
         name: 'button-remove',
         args: {
@@ -406,17 +408,7 @@ export function useGraph() {
 
     graph.getEdges().forEach(edge => {
       // 只保留查看按钮，移除其他工具（包括删除按钮）
-      edge.setTools([
-        {
-          name: 'button',
-          args: {
-            markup: viewButtonMarkup,
-            distance: -80,
-            offset: { x: 0, y: 0 },
-            onClick: viewButtonClickHandler,
-          },
-        },
-      ])
+      edge.setTools([viewButtonConfig])
     })
   }
 
@@ -427,15 +419,7 @@ export function useGraph() {
 
     graph.getEdges().forEach(edge => {
       edge.setTools([
-        {
-          name: 'button',
-          args: {
-            markup: viewButtonMarkup,
-            distance: -80,
-            offset: { x: 0, y: 0 },
-            onClick: viewButtonClickHandler,
-          },
-        },
+        viewButtonConfig,
         {
           name: 'button-remove',
           args: {
@@ -565,8 +549,7 @@ export function useGraph() {
     // 居中显示
     graph.centerContent()
 
-    // 使用 requestAnimationFrame 确保在浏览器重绘后执行
-    requestAnimationFrame(() => {
+    setTimeout(() => {
       nodesData.forEach((node: any) => {
         confirmNodeName(node.id)
       })
@@ -575,7 +558,7 @@ export function useGraph() {
       hideNodePorts()
       disableNodeDrag()
       // disableGraphInteraction()
-    })
+    }, 1000)
   }
 
   // 删除节点
