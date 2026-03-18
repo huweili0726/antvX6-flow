@@ -175,6 +175,23 @@ export function useGraph() {
       }),
     )
 
+    // 节点点击事件
+    graph.on('node:click', ({ cell }) => {
+      if (cell) {
+        const nodeType = cell.shape.replace('node-', '')
+        const nodeTypeConfig = nodeTypes.find(n => n.type === nodeType)
+        const nodeData = {
+          id: cell.id,
+          position: cell.position(),
+          data: cell.getData() || {},
+          type: cell.shape,
+          info: nodeTypeConfig?.info || {}
+        }
+        console.log('节点点击事件:', nodeData)
+        // 可以在这里触发自定义事件或调用回调函数
+      }
+    })
+
     // 将 graph 实例存储到 Pinia store
     graphStore.setGraph(graph)
     
@@ -188,13 +205,13 @@ export function useGraph() {
 
   // 节点类型配置（提取到外部以便复用）
   const nodeTypes = [
-    { type: 'switch1', name: '交换机类型1', image: '一级交换机@1x.png' },
-    { type: 'switch2', name: '交换机类型2', image: '二级交换机@1x.png' },
-    { type: 'switch3', name: '交换机类型3', image: '三级交换机@1x.png' },
-    { type: 'firewall', name: '防火墙', image: '防火墙@1x.png' },
-    { type: 'gateway', name: '网闸', image: '网闸@1x.png' },
-    { type: 'database', name: '数据库', image: '数据库@1x.png' },
-    { type: 'ip', name: '专网IP', image: '专网IP@1x.png' },
+    { type: 'switch1', name: '交换机类型1', image: '一级交换机@1x.png', info: { type: '交换机', model: 'S300-24', portCount: 24, speed: '100Mbps' } },
+    { type: 'switch2', name: '交换机类型2', image: '二级交换机@1x.png', info: { type: '交换机', model: 'S300-24', portCount: 24, speed: '100Mbps' } },
+    { type: 'switch3', name: '交换机类型3', image: '三级交换机@1x.png', info: { type: '交换机', model: 'S300-24', portCount: 24, speed: '100Mbps' } },
+    { type: 'firewall', name: '防火墙', image: '防火墙@1x.png', info: { type: '防火墙', model: 'FW-1000', portCount: 4, speed: '1Gbps' } },
+    { type: 'gateway', name: '网闸', image: '网闸@1x.png', info: { type: '网闸', model: 'GW-500', portCount: 8, speed: '1Gbps' } },
+    { type: 'database', name: '数据库', image: '数据库@1x.png', info: { type: '数据库', model: 'DB-2000', portCount: 16, speed: '10Gbps' } },
+    { type: 'ip', name: '专网IP', image: '专网IP@1x.png', info: { type: '专网IP', model: 'IP-Static', portCount: 1, speed: '100Mbps' } },
   ]
 
   // 注册自定义节点类型
