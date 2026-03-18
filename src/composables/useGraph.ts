@@ -474,6 +474,19 @@ export function useGraph() {
     
     // 居中显示
     graph.centerContent()
+
+    // 使用 requestAnimationFrame 确保在浏览器重绘后执行
+    requestAnimationFrame(() => {
+      // 执行后续操作
+      const nodes = getAllNodesData()
+      nodes.forEach((node: any) => {
+        confirmNodeName(node.id)
+      })
+      
+      hideEdgeRemoveButtons()
+      hideNodePorts()
+      disableGraphInteraction()
+    })
   }
 
   // 删除节点
