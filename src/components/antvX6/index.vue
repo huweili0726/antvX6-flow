@@ -35,61 +35,72 @@ onMounted(() => {
   // 测试数据：节点数据
   const testNodesData = [
     {
-      id: 'node_1',
-      x: 100,
-      y: 50,
-      name: '交换机类型1'
+      "id": "node_1",
+      "x": 100,
+      "y": 50,
+      "name": "交换机类型1"
     },
     {
-      id: 'node_2',
-      x: 300,
-      y: 150,
-      name: '交换机类型2'
+      "id": "node_2",
+      "x": 290,
+      "y": -140,
+      "name": "交换机类型2"
     },
     {
-      id: 'node_3',
-      x: 500,
-      y: 250,
-      name: '交换机类型3'
+      "id": "node_3",
+      "x": 530,
+      "y": -140,
+      "name": "交换机类型3"
     },
     {
-      id: 'node_4',
-      x: 200,
-      y: 350,
-      name: '防火墙'
+      "id": "node_4",
+      "x": 290,
+      "y": 290,
+      "name": "防火墙"
     },
     {
-      id: 'node_5',
-      x: 400,
-      y: 450,
-      name: '网闸'
+      "id": "node_5",
+      "x": 630,
+      "y": 290,
+      "name": "网闸"
+    },
+    {
+      "id": "node_d976e53b-dc42-4ffe-bb74-36d284d9a35f",
+      "x": 740,
+      "y": -140,
+      "name": "交换机类型1"
     }
   ]
   
   // 测试数据：连线数据
   const testEdgesData = [
     {
-      id: 'edge_1',
-      source: 'node_1',
-      target: 'node_2'
+      "id": "c2cf82fe-8c38-4d9d-b8a0-d1bc9b1772e8",
+      "source": "node_1",
+      "target": "node_2"
     },
     {
-      id: 'edge_2',
-      source: 'node_2',
-      target: 'node_3'
+      "id": "2cb77276-f558-4bdc-aa78-45e6636f89fc",
+      "source": "node_2",
+      "target": "node_3"
     },
     {
-      id: 'edge_3',
-      source: 'node_1',
-      target: 'node_4'
+      "id": "ed045f7c-21fd-4d25-9700-6f8ff26cf031",
+      "source": "node_1",
+      "target": "node_4"
     },
     {
-      id: 'edge_4',
-      source: 'node_4',
-      target: 'node_5'
+      "id": "e84cb605-abf8-4027-8762-397cef33d121",
+      "source": "node_4",
+      "target": "node_5"
+    },
+    {
+      "id": "2bf48a18-4271-49a9-81f1-d0006e5252ab",
+      "source": "node_3",
+      "target": "node_d976e53b-dc42-4ffe-bb74-36d284d9a35f"
     }
   ]
-  
+
   // 加载测试数据（用于回显测试）
   loadGraphData(testNodesData, testEdgesData)
   
