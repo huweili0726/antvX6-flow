@@ -480,7 +480,12 @@ export function useGraph() {
     const graph = graphStore.getGraph()
     if (!graph) return
     
-    graph.options.interacting = false // 禁止节点和连线交互
+    // 只禁用节点拖拽，保持其他交互（如点击）可用
+    graph.options.interacting = {
+      nodeMovable: false, // 禁止节点拖拽
+      edgeMovable: false, // 禁止连线拖拽
+      // 其他交互保持默认（如点击、缩放等）
+    }
   }
 
   // 启用节点拖拽
@@ -488,7 +493,8 @@ export function useGraph() {
     const graph = graphStore.getGraph()
     if (!graph) return
     
-    graph.options.interacting = true // 允许节点和连线交互
+    // 启用所有默认交互
+    graph.options.interacting = true
   }
 
   // 加载图数据（用于回显）
@@ -549,7 +555,7 @@ export function useGraph() {
     // 居中显示
     graph.centerContent()
 
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       nodesData.forEach((node: any) => {
         confirmNodeName(node.id)
       })
@@ -558,7 +564,7 @@ export function useGraph() {
       hideNodePorts()
       disableNodeDrag()
       // disableGraphInteraction()
-    }, 1000)
+    })
   }
 
   // 删除节点
