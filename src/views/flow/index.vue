@@ -35,7 +35,9 @@ const {
   hideNodePorts, // 隐藏所有节点的锚点
   showNodePorts, // 显示所有节点的锚点
   disableGraphInteraction, // 禁用画布所有交互（锁定）
-  enableGraphInteraction // 启用画布所有交互（解锁）
+  enableGraphInteraction, // 启用画布所有交互（解锁）
+  disableNodeDrag, // 禁用节点拖拽
+  enableNodeDrag, // 启用节点拖拽
 } = useGraph()
 
 // 处理节点拖动到图表上的事件
@@ -71,7 +73,8 @@ const handleConfirm = () => {
   
   hideEdgeRemoveButtons()
   hideNodePorts()
-  disableGraphInteraction()
+  disableNodeDrag()
+  // disableGraphInteraction()
   
   const edges = getAllEdgesData()
   console.log('所有节点数据:', nodes)
@@ -88,6 +91,7 @@ const handleEdit = () => {
   enableGraphInteraction()
   showEdgeRemoveButtons()
   showNodePorts()
+  enableNodeDrag()
 }
 </script>
 

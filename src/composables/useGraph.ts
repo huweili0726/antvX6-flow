@@ -480,7 +480,6 @@ export function useGraph() {
     
     graph.options.panning.enabled = false // 禁止拖拽画布
     graph.options.mousewheel.enabled = false // 禁止滚轮缩放
-    graph.options.interacting = false // 禁止节点和连线交互
   }
 
   // 启用画布所有交互（编辑时解锁）
@@ -490,8 +489,22 @@ export function useGraph() {
     
     graph.options.panning.enabled = true // 允许拖拽画布
     graph.options.mousewheel.enabled = true // 允许滚轮缩放
-    // 全局启用节点和连线交互
-    graph.options.interacting = true
+  }
+
+  // 禁用节点拖拽
+  const disableNodeDrag = () => {
+    const graph = graphStore.getGraph()
+    if (!graph) return
+    
+    graph.options.interacting = false // 禁止节点和连线交互
+  }
+
+  // 启用节点拖拽
+  const enableNodeDrag = () => {
+    const graph = graphStore.getGraph()
+    if (!graph) return
+    
+    graph.options.interacting = true // 允许节点和连线交互
   }
 
   // 加载图数据（用于回显）
@@ -560,7 +573,8 @@ export function useGraph() {
 
       hideEdgeRemoveButtons()
       hideNodePorts()
-      disableGraphInteraction()
+      disableNodeDrag()
+      // disableGraphInteraction()
     })
   }
 
@@ -611,6 +625,8 @@ export function useGraph() {
     showNodePorts,
     disableGraphInteraction,
     enableGraphInteraction,
+    disableNodeDrag,
+    enableNodeDrag,
     removeNode,
     removeEdge,
     clearGraph,
