@@ -18,6 +18,43 @@ export function useGraph() {
 
   const graphStore = useGraphStore()
   
+  // 边（连线）的默认配置
+  const defaultEdgeConfig = {
+    attrs: {
+      line: {
+        stroke: '#79AACD',
+        strokeWidth: 2,
+        targetMarker: {
+          name: 'classic',
+          size: 8,
+        },
+      },
+    },
+    router: {
+      name: 'manhattan',
+      args: {
+        padding: 20,
+        maxDirectionChange: 90,
+      },
+    },
+    connector: {
+      name: 'rounded',
+      args: {
+        radius: 8,
+      },
+    },
+    zIndex: 1,
+    tools: [
+      {
+        name: 'button-remove',
+        args: {
+          distance: -40,
+          offset: { x: 0, y: 0 },
+        },
+      },
+    ],
+  }
+  
   // 初始化图表
   const initGraph = (container: HTMLDivElement, minimapContainer: HTMLDivElement) => {
     const graph = new Graph({
@@ -45,41 +82,7 @@ export function useGraph() {
         allowNode: false,
         allowEdge: false,
         createEdge() {
-          return new Shape.Edge({ // 创建一条新的边（连线）
-            attrs: { // 边的样式属性
-              line: { // 线条样式
-                stroke: '#79AACD', // 线条颜色：浅蓝色
-                strokeWidth: 2, // 线条宽度：2像素
-                targetMarker: { // 目标端点标记（箭头）
-                  name: 'classic', // 箭头类型：经典三角形箭头
-                  size: 8, // 箭头大小：8像素
-                },
-              },
-            },
-            router: { // 路由配置：控制连线的路径算法
-              name: 'manhattan', // 曼哈顿路由：智能路由，会自动避开节点
-              args: { // 路由参数
-                padding: 20, // 连线与节点的最小间距：20像素
-                maxDirectionChange: 90, // 最大方向改变角度：90度（只能直角转弯）
-              },
-            },
-            connector: { // 连接器配置：控制连线的渲染样式
-              name: 'rounded', // 圆角连接器：拐角处有圆角，更加美观
-              args: { // 连接器参数
-                radius: 8, // 圆角半径：8像素
-              },
-            },
-            zIndex: 1, // 层级：1（在节点下方）
-            tools: [ // 边上的工具按钮
-              {
-                name: 'button-remove', // 删除按钮
-                args: {
-                  distance: -40, // 按钮距离终点的距离（负数表示在连线上）
-                  offset: { x: 0, y: 0 }, // 偏移量
-                },
-              },
-            ],
-          })
+          return new Shape.Edge(defaultEdgeConfig)
         },
       },
       highlighting: {
@@ -460,43 +463,11 @@ export function useGraph() {
       const targetNode = nodeMap.get(edgeData.target)
       
       if (sourceNode && targetNode) {
-        // 创建连线（使用与createEdge相同的样式）
+        // 创建连线（使用默认边配置）
         graph.addEdge({
           source: { cell: sourceNode.id, port: 'right' },
           target: { cell: targetNode.id, port: 'left' },
-          zIndex: 1,
-          attrs: {
-            line: {
-              stroke: '#79AACD',
-              strokeWidth: 2,
-              targetMarker: {
-                name: 'classic',
-                size: 8,
-              },
-            },
-          },
-          router: {
-            name: 'manhattan',
-            args: {
-              padding: 20,
-              maxDirectionChange: 90,
-            },
-          },
-          connector: {
-            name: 'rounded',
-            args: {
-              radius: 8,
-            },
-          },
-          tools: [
-            {
-              name: 'button-remove',
-              args: {
-                distance: -40,
-                offset: { x: 0, y: 0 },
-              },
-            },
-          ],
+          ...defaultEdgeConfig,
         })
       }
     })
