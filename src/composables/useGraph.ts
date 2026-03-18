@@ -57,6 +57,7 @@ export function useGraph() {
                 width: 16,
                 height: 16,
                 transform: 'translate(-50%, -50%)',
+                style: 'cursor: pointer;',
               },
               children: [
                 {
