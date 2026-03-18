@@ -20,12 +20,13 @@ const {
 } = useGraph()
 
 watch([width, height], ([newWidth, newHeight]) => {
+  console.log('width, height', newWidth, newHeight)
   const graph = getGraphInstance()
   if (graph && newWidth && newHeight) {
     graph.resize(newWidth, newHeight)
     graph.centerContent()
   }
-})
+}, { immediate: true })
 
 onMounted(() => {
   // 初始化图 【 graph初始化 + 对齐线 + 小地图】
