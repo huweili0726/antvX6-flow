@@ -477,6 +477,10 @@ export function useGraph() {
 
     // 使用 requestAnimationFrame 确保在浏览器重绘后执行
     requestAnimationFrame(() => {
+      nodesData.forEach((node: any) => {
+        confirmNodeName(node.id)
+      })
+
       hideEdgeRemoveButtons()
       hideNodePorts()
       disableGraphInteraction()
