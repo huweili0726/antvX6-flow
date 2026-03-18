@@ -17,7 +17,55 @@ import { useGraphStore } from '@/stores/graph'
 export function useGraph() {
 
   const graphStore = useGraphStore()
-  
+
+  // 查看按钮的 SVG 配置（复用）
+  const viewButtonMarkup = [
+    {
+      tagName: 'svg',
+      selector: 'icon',
+      attrs: {
+        viewBox: '0 0 1024 1024',
+        width: 16,
+        height: 16,
+        transform: 'translate(-50%, -50%)',
+        style: 'cursor: pointer;',
+      },
+      children: [
+        {
+          tagName: 'path',
+          attrs: {
+            d: 'M930.909091 930.909091a93.090909 93.090909 0 0 1-93.090909 93.090909H186.181818a93.090909 93.090909 0 0 1-93.090909-93.090909V93.090909a93.090909 93.090909 0 0 1 93.090909-93.090909h465.454546l279.272727 279.272727v651.636364z',
+            fill: '#FF8200',
+          },
+        },
+        {
+          tagName: 'path',
+          attrs: {
+            d: 'M329.541818 380.834909a209.454545 209.454545 0 0 1 325.492364 259.584l85.922909 86.016a46.545455 46.545455 0 0 1-65.815273 65.815273l-85.922909-85.969455A209.547636 209.547636 0 0 1 329.541818 380.834909z m49.384727 49.338182a139.636364 139.636364 0 1 0 197.492364 197.492364A139.636364 139.636364 0 0 0 378.88 430.219636z',
+            fill: '#FFFFFF',
+            'fill-opacity': '.881',
+          },
+        },
+        {
+          tagName: 'path',
+          attrs: {
+            d: 'M651.636364 0l279.272727 279.272727h-209.454546A69.818182 69.818182 0 0 1 651.636364 209.454545V0z',
+            fill: '#FFAF5B',
+          },
+        },
+      ],
+    },
+  ]
+
+  // 查看按钮的点击事件处理
+  const viewButtonClickHandler = (args: any) => {
+    if (args && args.cell) {
+      alert('查看连线id：' + args.cell.store.data.id)
+    } else {
+      console.warn('Edge not found in onClick args:', args)
+    }
+  }
+
   // 边（连线）的默认配置
   const defaultEdgeConfig = {
     attrs: {
@@ -48,53 +96,10 @@ export function useGraph() {
       {
         name: 'button',
         args: {
-          markup: [
-            {
-              tagName: 'svg',
-              selector: 'icon',
-              attrs: {
-                viewBox: '0 0 1024 1024',
-                width: 16,
-                height: 16,
-                transform: 'translate(0, 0)',
-                style: 'cursor: pointer;',
-              },
-              children: [
-                {
-                  tagName: 'path',
-                  attrs: {
-                    d: 'M930.909091 930.909091a93.090909 93.090909 0 0 1-93.090909 93.090909H186.181818a93.090909 93.090909 0 0 1-93.090909-93.090909V93.090909a93.090909 93.090909 0 0 1 93.090909-93.090909h465.454546l279.272727 279.272727v651.636364z',
-                    fill: '#FF8200',
-                  },
-                },
-                {
-                  tagName: 'path',
-                  attrs: {
-                    d: 'M329.541818 380.834909a209.454545 209.454545 0 0 1 325.492364 259.584l85.922909 86.016a46.545455 46.545455 0 0 1-65.815273 65.815273l-85.922909-85.969455A209.547636 209.547636 0 0 1 329.541818 380.834909z m49.384727 49.338182a139.636364 139.636364 0 1 0 197.492364 197.492364A139.636364 139.636364 0 0 0 378.88 430.219636z',
-                    fill: '#FFFFFF',
-                    'fill-opacity': '.881',
-                  },
-                },
-                {
-                  tagName: 'path',
-                  attrs: {
-                    d: 'M651.636364 0l279.272727 279.272727h-209.454546A69.818182 69.818182 0 0 1 651.636364 209.454545V0z',
-                    fill: '#FFAF5B',
-                  },
-                },
-              ],
-            },
-          ],
+          markup: viewButtonMarkup,
           distance: -80,
           offset: { x: 0, y: 0 },
-          onClick(args: any) {
-            // 点击连线上的按钮弹出查看弹窗
-            if (args && args.cell) {
-              alert('查看连线id：' + args.cell.store.data.id)
-            } else {
-              console.warn('Edge not found in onClick args:', args)
-            }
-          },
+          onClick: viewButtonClickHandler,
         },
       },
       {
@@ -394,23 +399,43 @@ export function useGraph() {
     }))
   }
 
-  // 隐藏所有边的删除按钮
+  // 隐藏所有边的删除按钮（但保留查看按钮）
   const hideEdgeRemoveButtons = () => {
     const graph = graphStore.getGraph()
     if (!graph) return
-    
+
     graph.getEdges().forEach(edge => {
-      edge.removeTools()
+      // 只保留查看按钮，移除其他工具（包括删除按钮）
+      edge.setTools([
+        {
+          name: 'button',
+          args: {
+            markup: viewButtonMarkup,
+            distance: -80,
+            offset: { x: 0, y: 0 },
+            onClick: viewButtonClickHandler,
+          },
+        },
+      ])
     })
   }
 
-  // 显示所有边的删除按钮
+  // 显示所有边的删除按钮（同时显示查看按钮）
   const showEdgeRemoveButtons = () => {
     const graph = graphStore.getGraph()
     if (!graph) return
-    
+
     graph.getEdges().forEach(edge => {
-      edge.addTools([
+      edge.setTools([
+        {
+          name: 'button',
+          args: {
+            markup: viewButtonMarkup,
+            distance: -80,
+            offset: { x: 0, y: 0 },
+            onClick: viewButtonClickHandler,
+          },
+        },
         {
           name: 'button-remove',
           args: {
