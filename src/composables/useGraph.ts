@@ -53,13 +53,10 @@ export function useGraph() {
               tagName: 'svg',
               selector: 'icon',
               attrs: {
-                t: '1773808247774',
-                class: 'icon',
                 viewBox: '0 0 1024 1024',
-                version: '1.1',
                 width: 16,
                 height: 16,
-                transform: 'translate(-50%, -50%)',
+                transform: 'translate(0, 0)',
                 style: 'cursor: pointer;',
               },
               children: [
@@ -89,7 +86,7 @@ export function useGraph() {
             },
           ],
           distance: -80,
-          offset: { x: 8, y: 8 },
+          offset: { x: 0, y: 0 },
           onClick(args: any) {
             // 点击连线上的按钮弹出查看弹窗
             if (args && args.cell) {
