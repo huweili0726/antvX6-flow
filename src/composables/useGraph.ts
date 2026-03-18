@@ -54,8 +54,8 @@ export function useGraph() {
               selector: 'icon',
               attrs: {
                 viewBox: '0 0 1024 1024',
-                width: 16,
-                height: 16,
+                width: 18,
+                height: 18,
                 transform: 'translate(-50%, -50%)',
                 style: 'cursor: pointer;',
               },
@@ -71,7 +71,7 @@ export function useGraph() {
             },
           ],
           distance: -80,
-          offset: { x: 8, y: 8 },
+          offset: { x: 9, y: 9 },
           onClick(args: any) {
             // 点击连线上的按钮弹出查看弹窗
             if (args && args.cell) {
