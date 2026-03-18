@@ -142,6 +142,53 @@ npm run preview
 | database | 数据库 | 数据库@1x.png |
 | ip | 专网IP | 专网IP@1x.png |
 
+### 数据格式
+
+#### 节点数据格式
+
+```json
+[
+    {
+        "id": "node_8a6f83cd-bdd6-4dc5-b1b5-58dcb74de7f0",
+        "isEditing": true,
+        "name": "一级交换机"
+    },
+    {
+        "id": "node_5b4f338a-ffc2-4781-af07-073767d4bb2d",
+        "isEditing": true,
+        "name": "二级交换机"
+    },
+    {
+        "id": "node_e62c6b2b-3261-4ed4-aaa5-b815df7d7328",
+        "isEditing": true,
+        "name": "防火墙"
+    }
+]
+```
+
+#### 连线数据格式
+
+```json
+[
+    {
+        "id": "bb60e0c8-bb91-4fe6-93fe-928b3bfdd918",
+        "source": "node_e62c6b2b-3261-4ed4-aaa5-b815df7d7328",
+        "target": "node_8a6f83cd-bdd6-4dc5-b1b5-58dcb74de7f0"
+    },
+    {
+        "id": "8712e0b3-a9f6-4eda-8276-e8a676df1501",
+        "source": "node_e62c6b2b-3261-4ed4-aaa5-b815df7d7328",
+        "target": "node_5b4f338a-ffc2-4781-af07-073767d4bb2d"
+    }
+]
+```
+
+| 字段 | 说明 |
+|------|------|
+| `id` | 连线唯一标识 |
+| `source` | 起点节点 ID |
+| `target` | 终点节点 ID |
+
 ## 开发说明
 
 ### 添加新节点类型
