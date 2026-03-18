@@ -313,10 +313,18 @@ export function useGraph() {
     const graph = graphStore.getGraph()
     if (!graph) return []
     
-    return graph.getNodes().map(node => ({
-      id: node.id,
-      ...node.getData()
-    }))
+    return graph.getNodes().map(node => {
+      const position = node.position()
+      const data = node.getData() || {}
+      // 解构移除 isEditing 字段
+      const { isEditing, ...restData } = data
+      return {
+        id: node.id,
+        x: position.x,
+        y: position.y,
+        ...restData
+      }
+    })
   }
 
   // 获取所有连线数据
