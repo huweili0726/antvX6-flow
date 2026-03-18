@@ -7,7 +7,7 @@
  * @date 2026-03-18
  * @description 封装 AntV X6 图表的核心逻辑，包括图表初始化、节点注册、连线配置、交互控制等功能
  */
-import { Graph, Shape, Snapline, MiniMap } from '@antv/x6'
+import { Graph, Shape, Snapline, MiniMap, Edge } from '@antv/x6'
 import { v4 as uuidv4 } from 'uuid'
 import { useGraphStore } from '@/stores/graph'
 
@@ -45,6 +45,44 @@ export function useGraph() {
     },
     zIndex: 1,
     tools: [
+      {
+        name: 'button',
+        args: {
+          markup: [
+            {
+              tagName: 'circle',
+              selector: 'button',
+              attrs: {
+                r: 8,
+                fill: '#52c41a',
+                stroke: '#fff',
+                strokeWidth: 2,
+              },
+            },
+            {
+              tagName: 'text',
+              selector: 'icon',
+              attrs: {
+                text: '👁',
+                fontSize: 10,
+                fill: '#fff',
+                textAnchor: 'middle',
+                dy: 4,
+              },
+            },
+          ],
+          distance: -60,
+          offset: { x: 0, y: 0 },
+          onClick(args: any) {
+            // 点击连线上的按钮弹出查看弹窗
+            if (args && args.cell) {
+              alert('查看连线id：' + args.cell.store.data.id)
+            } else {
+              console.warn('Edge not found in onClick args:', args)
+            }
+          },
+        },
+      },
       {
         name: 'button-remove',
         args: {
