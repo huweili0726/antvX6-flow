@@ -126,9 +126,9 @@ export function useGraph() {
 
   // 节点类型配置（提取到外部以便复用）
   const nodeTypes = [
-    { type: 'switch1', name: '一级交换机', image: '一级交换机@1x.png' },
-    { type: 'switch2', name: '二级交换机', image: '二级交换机@1x.png' },
-    { type: 'switch3', name: '三级交换机', image: '三级交换机@1x.png' },
+    { type: 'switch1', name: '交换机类型1', image: '一级交换机@1x.png' },
+    { type: 'switch2', name: '交换机类型2', image: '二级交换机@1x.png' },
+    { type: 'switch3', name: '交换机类型3', image: '三级交换机@1x.png' },
     { type: 'firewall', name: '防火墙', image: '防火墙@1x.png' },
     { type: 'gateway', name: '网闸', image: '网闸@1x.png' },
     { type: 'database', name: '数据库', image: '数据库@1x.png' },

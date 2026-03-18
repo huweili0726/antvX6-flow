@@ -8,8 +8,8 @@
         data-type="switch1"
         @dragstart="handleDragStart"
       >
-        <img src="@/assets/img/一级交换机@1x.png" alt="一级交换机" />
-        <span>一级交换机</span>
+        <img src="@/assets/img/一级交换机@1x.png" alt="交换机类型1" />
+        <span>交换机类型1</span>
       </div>
       <div 
         class="draggable-node" 
@@ -17,8 +17,8 @@
         data-type="switch2"
         @dragstart="handleDragStart"
       >
-        <img src="@/assets/img/二级交换机@1x.png" alt="二级交换机" />
-        <span>二级交换机</span>
+        <img src="@/assets/img/二级交换机@1x.png" alt="交换机类型2" />
+        <span>交换机类型2</span>
       </div>
       <div 
         class="draggable-node" 
@@ -26,8 +26,8 @@
         data-type="switch3"
         @dragstart="handleDragStart"
       >
-        <img src="@/assets/img/三级交换机@1x.png" alt="三级交换机" />
-        <span>三级交换机</span>
+        <img src="@/assets/img/三级交换机@1x.png" alt="交换机类型3" />
+        <span>交换机类型3</span>
       </div>
       <div 
         class="draggable-node" 

@@ -134,9 +134,9 @@ npm run preview
 
 | 类型 | 名称 | 图标 |
 |------|------|------|
-| switch1 | 一级交换机 | 一级交换机@1x.png |
-| switch2 | 二级交换机 | 二级交换机@1x.png |
-| switch3 | 三级交换机 | 三级交换机@1x.png |
+| switch1 | 交换机类型1 | 一级交换机@1x.png |
+| switch2 | 交换机类型2 | 二级交换机@1x.png |
+| switch3 | 交换机类型3 | 三级交换机@1x.png |
 | firewall | 防火墙 | 防火墙@1x.png |
 | gateway | 网闸 | 网闸@1x.png |
 | database | 数据库 | 数据库@1x.png |
@@ -150,17 +150,20 @@ npm run preview
 [
     {
         "id": "node_8a6f83cd-bdd6-4dc5-b1b5-58dcb74de7f0",
-        "isEditing": true,
-        "name": "一级交换机"
+        "x": 100,
+        "y": 50,
+        "name": "交换机类型1"
     },
     {
         "id": "node_5b4f338a-ffc2-4781-af07-073767d4bb2d",
-        "isEditing": true,
-        "name": "二级交换机"
+        "x": 200,
+        "y": 150,
+        "name": "交换机类型2"
     },
     {
         "id": "node_e62c6b2b-3261-4ed4-aaa5-b815df7d7328",
-        "isEditing": true,
+        "x": 300,
+        "y": 250,
         "name": "防火墙"
     }
 ]
