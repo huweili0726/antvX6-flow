@@ -460,11 +460,43 @@ export function useGraph() {
       const targetNode = nodeMap.get(edgeData.target)
       
       if (sourceNode && targetNode) {
-        // 创建连线
+        // 创建连线（使用与createEdge相同的样式）
         graph.addEdge({
           source: { cell: sourceNode.id, port: 'right' },
           target: { cell: targetNode.id, port: 'left' },
           zIndex: 1,
+          attrs: {
+            line: {
+              stroke: '#79AACD',
+              strokeWidth: 2,
+              targetMarker: {
+                name: 'classic',
+                size: 8,
+              },
+            },
+          },
+          router: {
+            name: 'manhattan',
+            args: {
+              padding: 20,
+              maxDirectionChange: 90,
+            },
+          },
+          connector: {
+            name: 'rounded',
+            args: {
+              radius: 8,
+            },
+          },
+          tools: [
+            {
+              name: 'button-remove',
+              args: {
+                distance: -40,
+                offset: { x: 0, y: 0 },
+              },
+            },
+          ],
         })
       }
     })
